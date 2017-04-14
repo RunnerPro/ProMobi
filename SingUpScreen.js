@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     fontFamily : 'Roboto-Regular'
   },
   buttomGet: {
-    height : height / 13,
+    height : height / 14,
     width: width*8/10,
     marginLeft : width/60,
     backgroundColor: '#00CC66',
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     }
   },
   buttonSingUpWithFacebook: {
-    height : height/13,
+    height : height/14,
     width: width*8/10,
     marginTop : 10,
     marginLeft : width/60,
