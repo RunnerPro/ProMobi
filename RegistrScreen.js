@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   },
   buttomGet: {
 
-    height : height / 13,
+    height : height / 14,
     width: width*8/10,
     //marginTop : ,
     marginLeft : width / 60,

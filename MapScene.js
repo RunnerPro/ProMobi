@@ -445,14 +445,16 @@ render() {
         {this._onRenderMapView()}
           <View style={styles.navBar}>
               <Image
-                source={require('./RectangleTop.png')}>
+                source={require('./RectangleTop.png')}
+                style = {{width:width,height : height/6}}>
                 <View style = {{flexDirection : 'row'}}>
                     <Text style={styles.TextActivityColories}>Active Calories</Text>
-                    <Text style = {styles.TextAVG}>Avg. min/miles</Text>
+                    <Text style = {styles.TextAVG}>Avg.min/miles</Text>
                   </View>
               </Image>
               <Image
-                source={require('./RectangleTop2.png')}>
+                source={require('./RectangleTop2.png')}
+                style = {{width:width, height : height/3}}>
                 <View style = {{ flexDirection: 'row'}}>
                   <Text style = {styles.TextNomberColories}>{parseFloat(this.state.distanceTravelled*100/1.6).toFixed(2)}</Text>
                   <Text style = {styles.TextColories}>kcal</Text>
@@ -479,13 +481,15 @@ render() {
             <View style={styles.bottomBar}>
             <Image
               source = {require('./ReactangleBottom2.png')}
-              style = {{width:width}}>
+              style = {{width:width,height : height*3/8}}>
               <Text style = {styles.NomberOfMiles}>{parseFloat(this.state.distanceTravelled/1.6).toFixed(2)}</Text>
               <Text style = {styles.TextMiles}>MILE</Text>
             </Image>
               <Image
                 source = {require('./RectangleBottom.png')}
-                style = {{width: width}}>
+                style = {{width: width,
+                          height : height*2/9,
+                          top : height }}>
                   <Text style = {styles.TextTime}>{this.state.min2}{this.state.min}:{this.state.Sec2}{this.state.Sec}.{this.state.Milsec2}</Text>
                   <TouchableOpacity style = {styles.touchPlay} onPress={() => this._onChangePlay()}>
                     {this._onPressPlayButton()}
@@ -706,9 +710,9 @@ const styles = StyleSheet.create({
     borderColor : '#979797',
     fontFamily: 'Roboto-Medium',
     backgroundColor : 'transparent',
-    fontSize : 20,
-    marginTop : - height/85,
-    marginHorizontal : width/2,
+    fontSize : 17,
+    marginTop : - height/110,
+    marginHorizontal : width*5/11,
   },
   TextAVG : {
     fontSize : 10,
@@ -716,7 +720,7 @@ const styles = StyleSheet.create({
     marginTop : height/7,
     backgroundColor : 'transparent',
     fontFamily: 'Roboto-Regular',
-    marginHorizontal : width*3/7,
+    marginHorizontal : width*4/10,
 
   },
   TextNomberColories:{
@@ -724,7 +728,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Medium',
     backgroundColor : 'transparent',
     marginHorizontal: width/25,
-    marginTop : - height/85,
+    marginTop : - height/100,
     fontSize : 20,
 
   },
