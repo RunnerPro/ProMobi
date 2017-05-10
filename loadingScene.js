@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
 
   },
   buttonSingUpWithEmail: {
-    height: height/10,
+    height: height/12,
     width: width*8/10,
     paddingVertical: 10,
     paddingHorizontal: 20,
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
     }
   },
   buttonSingUpWithFacebook: {
-    height: height/10,
+    height: height/12,
     width: width*8/10,
     paddingVertical: 10,
     paddingHorizontal: 20,

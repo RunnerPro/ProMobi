@@ -491,6 +491,7 @@ render() {
             <Image
               source = {require('./ReactangleBottom2.png')}
               style = {{width:width,height : height*0.372}}>
+
               <Text style = {styles.NomberOfMiles}>{parseFloat(this.state.distanceTravelled/1.6).toFixed(2)}</Text>
               <Text style = {styles.TextMiles}>MILE</Text>
             </Image>
@@ -726,7 +727,6 @@ const styles = StyleSheet.create({
     backgroundColor : 'transparent',
     fontFamily: 'Roboto-Regular',
     marginLeft : width*0.49,
-
   },
   TextNomberColories:{
     borderColor : '#979797',
