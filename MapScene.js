@@ -19,7 +19,8 @@ import {
 
 import pick from 'lodash.pick'
 import haversine from 'haversine'
-import FBSDK , {LoginManager,AccessToken} from 'react-native-fbsdk';
+import FBSDK , {LoginManager,AccessToken,FBGraphRequest,LoginButton} from 'react-native-fbsdk';
+
 
 
 var SCREEN_WIDTH = require('Dimensions').get('window').width
@@ -123,6 +124,7 @@ async onPress(arrayDataAndTime, arrayDistance) {
                            })
                           });
   } catch(errors) {
+    console.log(errors)
     }
   }
 _onPresStop(){
@@ -141,7 +143,7 @@ _onPresStop(){
  const arrayDistance=[];
  const data={
    type:this.state.TypeOF,
- time: JSON.stringify(new Date),
+   time: JSON.stringify(new Date),
  }
  const dis={
 
@@ -164,13 +166,16 @@ _onPresStop(){
   AsyncStorage.getItem('database').then((value)=>{
                                        if(value !== null){
                                        const d=JSON.parse(value);
-                                       d.push(data)
+                                       d.push(dis)
                                        AsyncStorage.setItem('database',JSON.stringify(d))
                                        }
                                        else{
-                                       AsyncStorage.setItem('database',JSON.stringify(arrayDataAndTime))
+                                       AsyncStorage.setItem('database',JSON.stringify(dis))
                                      }
                                        })
+                  AsyncStorage.getItem('database').then((value) => {
+                    console.log(value)
+                  })
 }
 
  _onPressPlayButton(){
@@ -264,8 +269,8 @@ _onSelectACTYVITYLOG(){
 
 _onSeclectLOGOUT(){
   this.state.check = false;
-  LoginManager.logOut();
   AsyncStorage.removeItem('databaseTOKEN');
+  LoginManager.logOut();
   this.props.navigator.replace({id:1,});
   this.setState({PressBurger :false});
 }
@@ -298,7 +303,7 @@ _renderBurger(){
               <TouchableOpacity onPress={() => this._onSelectACTYVITYLOG()} >
                 <Text style = {styles.TypeOFText}>ACTYVITY LOG</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => this._onSeclectSCREENLAYOUT()} >
+              <TouchableOpacity >
                 <Text style = {styles.TypeOFText}>SCREEN LAYOUT</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => this._onSeclectLOGOUT()} >
@@ -456,9 +461,13 @@ render() {
                 source={require('./RectangleTop2.png')}
                 style = {{width:width, height : height/3}}>
                 <View style = {{ flexDirection: 'row'}}>
-                  <Text style = {styles.TextNomberColories}>{parseFloat(this.state.distanceTravelled*100/1.6).toFixed(2)}</Text>
-                  <Text style = {styles.TextColories}>kcal</Text>
-                  <Text style = {styles.TextNomberAVG}>{this.state.speed}</Text>
+                  <View style = {{width : width /3}}>
+                    <Text style = {styles.TextNomberColories}>{parseFloat(this.state.distanceTravelled*100/1.6).toFixed(2)}</Text>
+                    <Text style = {styles.TextColories}>kcal</Text>
+                  </View>
+                  <View style ={{width:width/4, marginLeft : width*0.4}}>
+                    <Text style = {styles.TextNomberAVG}>{parseFloat(this.state.speed).toFixed(2)}</Text>
+                  </View>
                 </View>
 
               </Image>
@@ -481,14 +490,15 @@ render() {
             <View style={styles.bottomBar}>
             <Image
               source = {require('./ReactangleBottom2.png')}
-              style = {{width:width,height : height*3/8}}>
+              style = {{width:width,height : height*0.372}}>
+
               <Text style = {styles.NomberOfMiles}>{parseFloat(this.state.distanceTravelled/1.6).toFixed(2)}</Text>
               <Text style = {styles.TextMiles}>MILE</Text>
             </Image>
               <Image
                 source = {require('./RectangleBottom.png')}
                 style = {{width: width,
-                          height : height*2/9,
+                          height : height*2/8,
                           top : height }}>
                   <Text style = {styles.TextTime}>{this.state.min2}{this.state.min}:{this.state.Sec2}{this.state.Sec}.{this.state.Milsec2}</Text>
                   <TouchableOpacity style = {styles.touchPlay} onPress={() => this._onChangePlay()}>
@@ -498,7 +508,7 @@ render() {
                     {this._onRenderStop()}
                   </TouchableOpacity>
                   <Text style = {styles.TextBPM}>Heart rate</Text>
-                  <View style = {{flexDirection : 'row'}}>
+                  <View style = {{flexDirection : 'row',width : width /5, marginLeft:width*0.75}}>
                     <Text style = {styles.NomberBPM} >107</Text>
                     <Text style = {styles.bpm}>bpm</Text>
                   </View>
@@ -596,8 +606,6 @@ const styles = StyleSheet.create({
     fontFamily : 'Roboto-Medium',
     fontSize : 20,
     color : '#000000',
-    paddingLeft : width *3/4,
-
   },
   TextBPM : {
     backgroundColor : 'transparent',
@@ -647,12 +655,12 @@ const styles = StyleSheet.create({
     color : '#7002FF',
     fontSize : 40,
     textAlign : 'center',
-
   },
   TextMiles : {
     backgroundColor : 'transparent',
-    marginHorizontal: width*4/9,
-    marginTop : -height /45,
+    marginLeft: width*0.46,
+    marginTop : -height /70,
+    fontSize : 20,
     fontFamily : 'Roboto-Medium',
     color : '#D8D8D8'
   },
@@ -660,10 +668,9 @@ const styles = StyleSheet.create({
     backgroundColor : 'transparent',
     color : '#000000',
     fontFamily : 'Roboto-Medium',
-    marginTop : height*4/15,
+    marginTop : height*0.273,
     textAlign : 'center',
     fontSize : 40
-
   },
   TextFactor : {
     backgroundColor : 'transparent',
@@ -686,7 +693,7 @@ const styles = StyleSheet.create({
     fontFamily : 'Roboto-Medium',
     textAlign : 'center',
     color : '#ffffff',
-    marginTop : - height/45,
+    marginTop : - height/100,
   },
   TextNomberPTS : {
     backgroundColor : 'transparent',
@@ -710,9 +717,8 @@ const styles = StyleSheet.create({
     borderColor : '#979797',
     fontFamily: 'Roboto-Medium',
     backgroundColor : 'transparent',
-    fontSize : 17,
-    marginTop : - height/110,
-    marginHorizontal : width*5/11,
+    fontSize : 20,
+    marginTop : - height/130
   },
   TextAVG : {
     fontSize : 10,
@@ -720,15 +726,14 @@ const styles = StyleSheet.create({
     marginTop : height/7,
     backgroundColor : 'transparent',
     fontFamily: 'Roboto-Regular',
-    marginHorizontal : width*4/10,
-
+    marginLeft : width*0.49,
   },
   TextNomberColories:{
     borderColor : '#979797',
     fontFamily: 'Roboto-Medium',
     backgroundColor : 'transparent',
     marginHorizontal: width/25,
-    marginTop : - height/100,
+    marginTop : - height/130,
     fontSize : 20,
 
   },
@@ -736,7 +741,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Medium',
     backgroundColor : 'transparent',
     marginLeft:-width/25,
-    marginTop : height /240,
+    marginTop : height /300,
     fontSize : 10,
     color: '#979797',
 
