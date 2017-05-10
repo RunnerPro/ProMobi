@@ -20,16 +20,82 @@ var SCREEN_WIDTH = require('Dimensions').get('window').width;
 var BaseConfig = Navigator.SceneConfigs.FloatFromRight;
 const { width, height } = Dimensions.get('window');
 
+var email = ''
+var name = ''
+var password = ''
+
+
 
 class RegistrScreen extends Component{
   constructor(props) {
-    super(props);
-    this.inputs = {
-      name: '',
-      email: '',
-      password: '',
-    };
+    super(props)
+    this.state = {
+    }
   }
+
+async  _onPressGetStart(){
+  if (name != '' && password != '' && email != ''){
+      try {
+        let response = await fetch("https://runner-pro.herokuapp.com/api/users", {
+                                method: 'POST',
+                                headers: {
+                                  'Accept': 'application/json',
+                                  'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify ({
+                                  username : name,
+                                  email : email,
+                                  password : password,
+                               })
+                              });
+                              console.log(response)
+      } catch(errors) {
+        console.log(errors)
+    }
+  }
+}
+
+_renderTextFild(){
+  return(
+    <View style ={styles.Account}>
+      <TextField
+        label={'User Name'}
+        labelColor={'#000'}
+        highlightColor={'#460D80'}
+        textFocusColor={'#460D80'}
+        textBlurColor={'#460D80'}
+        onChangeText={(text) => {
+          name = text;
+         }}
+         labelStyle={{
+           color: '#9E9E9E',
+         }} />
+        <TextField
+          label={'Email'}
+          highlightColor={'#460D80'}
+          textFocusColor={'#460D80'}
+          textBlurColor={'#460D80'}
+          onChangeText={(text) => {
+            email = text;
+         }}
+         labelStyle={{
+           color: '#9E9E9E',
+        }}/>
+        <TextField
+          label={'Password'}
+          highlightColor={'#460D80'}
+          textFocusColor={'#460D80'}
+          textBlurColor={'#460D80'}
+          secureTextEntry = {true}
+          onChangeText={(text) => {
+            password = text;
+           }}
+          labelStyle={{
+            color: '#9E9E9E',
+          }}/>
+      </View>
+    )
+}
   render(){
     return(
       <Image
@@ -38,14 +104,12 @@ class RegistrScreen extends Component{
           <View style = {styles.container}>
             <View style = {styles.navBar}>
               <Text style = {styles.navBarText}> SING UP</Text>
-
                 <TouchableOpacity onPress={() => this.props.navigator.replace({id: 7,})}>
                   <Image
                     source = {require('./policy.png')}
                     style = {styles.imgPolicy}
                     />
                 </TouchableOpacity>
-
               <View style = {styles.BarForBack}>
                 <TouchableOpacity onPress={() => this.props.navigator.replace({id: 1,})}>
                   <Image
@@ -54,50 +118,10 @@ class RegistrScreen extends Component{
                 </TouchableOpacity>
               </View>
             </View>
-            <View style ={styles.Account}>
-              <TextField
-
-                label={'User Name'}
-                 labelColor={'#000'}
-                highlightColor={'#460D80'}
-                textFocusColor={'#460D80'}
-                textBlurColor={'#460D80'}
-                onChangeText={(text) => {
-                  this.inputs.name = text;
-             }}
-             labelStyle={{
-               color: '#9E9E9E',
-             }}
-              />
-              <TextField
-                label={'Email'}
-                highlightColor={'#460D80'}
-                textFocusColor={'#460D80'}
-                textBlurColor={'#460D80'}
-                onChangeText={(text) => {
-                  this.inputs.email = text;
-             }}
-                labelStyle={{
-                  color: '#9E9E9E',
-                }}
-                 />
-              <TextField
-                label={'Password'}
-                highlightColor={'#460D80'}
-                textFocusColor={'#460D80'}
-                textBlurColor={'#460D80'}
-                secureTextEntry = {true}
-                onChangeText={(text) => {
-                  this.inputs.password = text;
-             }}
-                labelStyle={{
-                  color: '#9E9E9E',
-                  }}
-                 />
-            </View>
+            {this._renderTextFild()}
             <View style={styles.ViewForButton}>
             <View style={styles.buttonGet}>
-              <TouchableOpacity >
+              <TouchableOpacity onPress ={this._onPressGetStart} >
                 <View style={styles.buttomGet}>
                   <Text style={styles.buttomGetText}>Get Start</Text>
                 </View>
@@ -112,7 +136,6 @@ class RegistrScreen extends Component{
 
 const styles = StyleSheet.create({
   BarimgPolicy:{
-
     height:width/9,
     width:width/9,
     top: -width/13,
@@ -180,7 +203,7 @@ const styles = StyleSheet.create({
   },
   buttomGet: {
 
-    height : height / 13,
+    height : height / 14,
     width: width*8/10,
     //marginTop : ,
     marginLeft : width / 60,

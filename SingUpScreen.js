@@ -22,13 +22,12 @@ const { width, height } = Dimensions.get('window');
 import TextField from 'react-native-md-textinput';
 import FBSDK , {LoginManager ,LoginButton, AccessToken} from 'react-native-fbsdk';
 
-
+var name = ''
+var password = ''
 class SingUpScreen extends Component {
   constructor(props) {
     super(props);
     this.inputs = {
-      name: '',
-      password: '',
     };
     this._TestRegistration = this._TestRegistration.bind(this);
   }
@@ -86,7 +85,7 @@ render() {
           textFocusColor={'#460D80'}
           textBlurColor={'#460D80'}
           onChangeText={(text) => {
-            this.inputs.name = text;
+            name = text;
        }}
        labelStyle={{
          color: '#9E9E9E',
@@ -100,7 +99,7 @@ render() {
           textBlurColor={'#460D80'}
           secureTextEntry = {true}
           onChangeText={(text) => {
-            this.inputs.password = text;
+            password = text;
        }}
           labelStyle={{
             color: '#9E9E9E',
@@ -165,7 +164,7 @@ const styles = StyleSheet.create({
     fontFamily : 'Roboto-Regular'
   },
   buttomGet: {
-    height : height / 13,
+    height : height / 14,
     width: width*8/10,
     marginLeft : width/60,
     backgroundColor: '#00CC66',
@@ -179,7 +178,7 @@ const styles = StyleSheet.create({
     }
   },
   buttonSingUpWithFacebook: {
-    height : height/13,
+    height : height/14,
     width: width*8/10,
     marginTop : 10,
     marginLeft : width/60,
