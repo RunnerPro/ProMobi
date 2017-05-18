@@ -108,9 +108,11 @@ _onChangePlay(){
 
 
 async onPress(arrayDataAndTime, arrayDistance) {
+  console.log(arrayDataAndTime)
+  console.log(arrayDistance)
 
   try {
-    let response = await fetch("https://runner-pro.herokuapp.com/api/v1.0/records", {
+    let response = await fetch("https://runner-pro.herokuapp.com/new_one", {
                             method: 'POST',
                             headers: {
                            'Accept': 'application/json',
@@ -123,6 +125,10 @@ async onPress(arrayDataAndTime, arrayDistance) {
                               },
                            })
                           });
+                          console.log(response)
+                  //      let data = await response.Body.json();
+                    //    let parseTest = JSON.parse(date);
+                      //  console.log(parseTest)
   } catch(errors) {
     console.log(errors)
     }
@@ -174,7 +180,6 @@ _onPresStop(){
                                      }
                                        })
                   AsyncStorage.getItem('database').then((value) => {
-                    console.log(value)
                   })
 }
 
@@ -182,14 +187,14 @@ _onPresStop(){
    if(!this.state.playPress){
    return (
      <Image
-       source = {require('./_btn_play_2.png')}
+       source = {require('./images/_btn_play_2.png')}
        style = {styles.btPlay}/>
    );
  }else{
    return (
      <Image
      style={styles.btPlay}
-     source={require('./_btn_pause_4.png')}/>
+     source={require('./images/_btn_pause_4.png')}/>
    );
  }
  }
@@ -198,7 +203,7 @@ _onPresStop(){
    if(!this.state.stopPress){
      return(
        <Image
-       source = {require('./btStop.png')}
+       source = {require('./images/btStop.png')}
        style = {styles.btStop}/>
      );
    }
@@ -284,7 +289,7 @@ _renderBurger(){
   if(this.state.PressBurger){
     return(
       <Image
-        source={require('./bg.png')}
+        source={require('./images/bg.png')}
         style={styles.img2}>
           <View style = {styles.container3}>
             <View style={styles.navBar2}>
@@ -292,7 +297,7 @@ _renderBurger(){
                 <View style ={styles.BarForBurger}>
                   <TouchableOpacity onPress={() => this.setState({PressBurger : false})}>
                     <Image
-                    source={require('./_close_white.png')}
+                    source={require('./images/_close_white.png')}
                     style ={styles.imgClose}/>
                   </TouchableOpacity>
                 </View>
@@ -408,7 +413,7 @@ _RenderBonus (){
  if (this.state.TimeTraning > 30){
   return (
     <Image
-      source = {require('./XImage.png')}
+      source = {require('./images/XImage.png')}
       style = {styles.imageXPTS}>
       <View style ={{flexDirection : 'row'}}>
         <Text style = {styles.TextX}>X</Text>
@@ -450,7 +455,7 @@ render() {
         {this._onRenderMapView()}
           <View style={styles.navBar}>
               <Image
-                source={require('./RectangleTop.png')}
+                source={require('./images/RectangleTop.png')}
                 style = {{width:width,height : height/6}}>
                 <View style = {{flexDirection : 'row'}}>
                     <Text style={styles.TextActivityColories}>Active Calories</Text>
@@ -458,7 +463,7 @@ render() {
                   </View>
               </Image>
               <Image
-                source={require('./RectangleTop2.png')}
+                source={require('./images/RectangleTop2.png')}
                 style = {{width:width, height : height/3}}>
                 <View style = {{ flexDirection: 'row'}}>
                   <View style = {{width : width /3}}>
@@ -473,7 +478,7 @@ render() {
               </Image>
               <TouchableOpacity style={styles.TouchPolygon}>
                 <Image
-                  source ={require('./Polygon.png')}
+                  source ={require('./images/Polygon.png')}
                   style = {styles.imgPolygon}>
                   <Text style = {styles.TextNomberPTS}>{this._pts()}</Text>
                   <Text style = {styles.TextPTS}>pts</Text>
@@ -482,20 +487,20 @@ render() {
             </TouchableOpacity>
             <TouchableOpacity style={styles.TouchHamburger} onPress={() => this.setState({PressBurger : true})}>
               <Image
-                source ={require('./hamburger.png')}
+                source ={require('./images/hamburger.png')}
                 style = {styles.imgHamburger}
                 />
             </TouchableOpacity>
             </View>
             <View style={styles.bottomBar}>
             <Image
-              source = {require('./ReactangleBottom2.png')}
+              source = {require('./images/ReactangleBottom2.png')}
               style = {{width:width,height : height*0.372}}>
               <Text style = {styles.NomberOfMiles}>{parseFloat(this.state.distanceTravelled/1.6).toFixed(2)}</Text>
               <Text style = {styles.TextMiles}>MILE</Text>
             </Image>
               <Image
-                source = {require('./RectangleBottom.png')}
+                source = {require('./images/RectangleBottom.png')}
                 style = {{width: width,
                           height : height*2/8,
                           top : height }}>

@@ -99,21 +99,21 @@ _renderTextFild(){
   render(){
     return(
       <Image
-        source = {require('./Rectangle.png')}
+        source = {require('./images/Rectangle.png')}
         style = {{width : width}}>
           <View style = {styles.container}>
             <View style = {styles.navBar}>
               <Text style = {styles.navBarText}> SING UP</Text>
                 <TouchableOpacity onPress={() => this.props.navigator.replace({id: 7,})}>
                   <Image
-                    source = {require('./policy.png')}
+                    source = {require('./images/policy.png')}
                     style = {styles.imgPolicy}
                     />
                 </TouchableOpacity>
               <View style = {styles.BarForBack}>
                 <TouchableOpacity onPress={() => this.props.navigator.replace({id: 1,})}>
                   <Image
-                  source={require('./back.png')}
+                  source={require('./images/back.png')}
                   style ={styles.imgBack}/>
                 </TouchableOpacity>
               </View>
