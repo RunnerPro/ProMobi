@@ -174,7 +174,7 @@ class PageTwo extends Component {
         d.push(dis)
         AsyncStorage.setItem('database',JSON.stringify(d))
       } else {
-        AsyncStorage.setItem('database',JSON.stringify(dis))
+        AsyncStorage.setItem('database',JSON.stringify([dis]))
       }
     })
     AsyncStorage.getItem('database').then((value) => {})
