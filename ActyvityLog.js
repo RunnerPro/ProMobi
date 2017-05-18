@@ -62,7 +62,7 @@ constructor(){
 
               <TouchableOpacity onPress={() => this.props.navigator.replace({id: 2,})}>
                 <Image
-                source={require('./back.png')}
+                source={require('./images/back.png')}
                 style ={styles.imgBack}/>
                 </TouchableOpacity>
 

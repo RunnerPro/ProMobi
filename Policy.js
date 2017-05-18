@@ -34,7 +34,7 @@ class Policy extends Component{
   render(){
     return(
       <Image
-        source = {require('./Rectangle.png')}
+        source = {require('./images/Rectangle.png')}
         style = {{width : width, height : height}}>
         <View style = {styles.container}>
           <View style = {styles.navBar}>
@@ -42,7 +42,7 @@ class Policy extends Component{
             <View style = {styles.BarForBack}>
               <TouchableOpacity onPress={() => this.props.navigator.replace({id: 1,})}>
                 <Image
-                source={require('./back.png')}
+                source={require('./images/back.png')}
                 style ={styles.imgBack}/>
               </TouchableOpacity>
             </View>

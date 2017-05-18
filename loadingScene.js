@@ -74,18 +74,18 @@ var PageOne = React.createClass ( {
   render() {
     return (
       <Image
-        source = {require('./Rectangle.png')}
+        source = {require('./images/Rectangle.png')}
         style = {{width : width}}>
         {this._checkToken()}
         <TouchableOpacity onPress={() => this._handlePressId(7)}>
             <Image
-              source = {require('./policy.png')}
+              source = {require('./images/policy.png')}
               style = {styles.Policy}/>
         </TouchableOpacity>
         <View style={styles.container}>
         <Image
           style={styles.imageLogo}
-          source={require('./logo2.png')}/>
+          source={require('./images/logo2.png')}/>
         <Text style={styles.welcome}>Welcome to RunnerPro</Text>
         <Text style = {styles.TextRunnForGood}>Everything you need to be health</Text>
         <Text style = {styles.TextRunnForGood}>& beat your goals</Text>
