@@ -64,6 +64,7 @@ class PageTwo extends Component {
       lastlatitude : 0,
       lastlongitude : 0,
       pressStop : 0,
+      coord : [],
       Milsec : 0,
       Milsec2 : 0,
       Sec : 0,
