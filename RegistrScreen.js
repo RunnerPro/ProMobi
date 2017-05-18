@@ -45,10 +45,12 @@ async  _onPressGetStart(){
                                 body: JSON.stringify ({
                                   username : name,
                                   email : email,
-                                  password : password,
+                                  password : password
                                })
                               });
+                              let res = response.text()
                               console.log(response)
+                              console.log(res)
       } catch(errors) {
         console.log(errors)
     }

@@ -109,26 +109,25 @@ _onChangePlay(){
 
 async onPress(arrayDataAndTime, arrayDistance) {
   console.log(arrayDataAndTime)
-  console.log(arrayDistance)
+  console.log(JSON.stringify(arrayDistance))
+
 
   try {
-    let response = await fetch("https://runner-pro.herokuapp.com/new_one", {
+    let response = await fetch("https://runner-pro.herokuapp.com/api/recordstest", {
                             method: 'POST',
                             headers: {
-                           'Accept': 'application/json',
-                           'Content-Type': 'application/json',
+                              'Accept': 'application/json',
+                              'Content-Type': 'application/json'
                          },
                             body:JSON.stringify ({
                               data:{
-                                time: arrayDataAndTime,
-                                cords : arrayDistance,
+                                coordinates: arrayDistance
                               },
                            })
                           });
+                          let res = response.text()
+                          console.log(res)
                           console.log(response)
-                  //      let data = await response.Body.json();
-                    //    let parseTest = JSON.parse(date);
-                      //  console.log(parseTest)
   } catch(errors) {
     console.log(errors)
     }
@@ -152,7 +151,6 @@ _onPresStop(){
    time: JSON.stringify(new Date),
  }
  const dis={
-
    coordinates: this.state.coord,
    speed:speedlist,
  }
