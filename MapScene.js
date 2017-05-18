@@ -147,13 +147,14 @@ class PageTwo extends Component {
     const arrayDataAndTime=[];
     const arrayDistance=[];
     const data = { 
-      type:this.state.TypeOF,
+      type: this.state.TypeOF,
       time: JSON.stringify(new Date),
     }
     
     const dis = {
       coordinates: this.state.coord,
-      speed:speedlist,
+      speed: speedlist,
+      distance: this.state.distanceTravelled,
     }
     
     arrayDataAndTime.push(data);
@@ -170,26 +171,20 @@ class PageTwo extends Component {
     
     AsyncStorage.getItem('database').then((value) => {
       if (value !== null) {
-        const d=JSON.parse(value);
+        const d = JSON.parse(value);
         d.push(dis)
-        AsyncStorage.setItem('database',JSON.stringify(d))
+        AsyncStorage.setItem('database', JSON.stringify(d))
       } else {
-        AsyncStorage.setItem('database',JSON.stringify([dis]))
+        AsyncStorage.setItem('database', JSON.stringify([dis]))
       }
     })
     AsyncStorage.getItem('database').then((value) => {})
   }
   
   _onPressPlayButton(){
-    if (!this.state.playPress){
       return (
-        <Image source = {require('./images/_btn_play_2.png')}
+        <Image source = {this.state.playPress ?  require('./images/_btn_pause_4.png') : require('./images/_btn_play_2.png')}
         style = {styles.btPlay}/>);
-    } else {
-      return (
-        <Image style={styles.btPlay}
-        source={require('./images/_btn_pause_4.png')}/> );
-    }
   }
   
   _onRenderStop() {

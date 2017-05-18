@@ -44,7 +44,7 @@ export default class ActyvityLog extends Component{
             </TouchableOpacity>
           </View>
           <View style={{flexDirection: 'row',flexWrap: 'wrap'}}>
-            <Text style={styles.textDistance}>{data.distance+' ml'}</Text>
+            <Text style={styles.textDistance}>{data.distance + ' ml'}</Text>
             <Text style={styles.textTime}>Time</Text>
             <Text style={styles.textSpeed}>Speed</Text>
           </View>
