@@ -75,7 +75,8 @@ class PageTwo extends Component {
       check : false,
       TimeTraning : 0,
       i : 0,
-      pts : 0
+      pts : 0,
+      appState: AppState.currentState
     }
     this._timer = this._timer.bind(this);
     this._timeTraning = this._timeTraning.bind(this);
@@ -209,7 +210,6 @@ class PageTwo extends Component {
   }
 
   doWatch(){
-    console.log("check 2")
     navigator.geolocation.getCurrentPosition(
       (position) => {},
       (error) => alert(error.message),
@@ -242,18 +242,18 @@ class PageTwo extends Component {
       (error) => alert(error.message),
       {enableHighAccuracy: true, timeout: 1000, maximumAge: 0, distanceFilter: 5}
     );
-
   }
 
   _handleAppStateChange = (nextAppState) => {
     console.log(this.state.stopPress);
-    console.log("check 3")
+     this.setState({appState: nextAppState});
+     console.log(this.state.appState)
     if (nextAppState !== 'active' && this.state.stopPress) {
       navigator.geolocation.clearWatch(this.watchID);
       this.watchID = null;
     } else {
-      if (this.watchID === null) {
-        console.log("check 4")
+      if (this.watchID !== null) {
+        console.log("check 5")
         this.doWatch();
       }
     }
