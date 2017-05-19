@@ -30,16 +30,13 @@ var password = ''
 class RegistrScreen extends Component{
   constructor(props) {
     super(props)
-    this.state = {
-    }
   }
 
   _handlePressId(Id) {
     this.props.navigator.replace({id: Id,});
   }
 
-async  _onPressGetStart(){
-  var self = this ;
+async  _onPressGetStart(self){
   if (name != '' && password != '' && email != ''){
       try {
         let response = await fetch("https://runner-pro.herokuapp.com/api/users", {
@@ -61,9 +58,7 @@ async  _onPressGetStart(){
             AsyncStorage.setItem('databaseTOKEN',JSON.stringify(res));
             }
           })
-          console.log(this)
-          console.log(self)
-          self._handlePressId(2)
+          self.props.navigator.replace({id: 2,})
       } catch(errors) {
         console.log(errors)
     }
@@ -135,7 +130,7 @@ _renderTextFild(){
             {this._renderTextFild()}
             <View style={styles.ViewForButton}>
               <View style={styles.buttonGet}>
-                <TouchableOpacity onPress ={this._onPressGetStart} >
+                <TouchableOpacity onPress ={() => this._onPressGetStart(this)} >
                   <View style={styles.buttomGet}>
                     <Text style={styles.buttomGetText}>Get Start</Text>
                   </View>
