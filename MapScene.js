@@ -13,7 +13,8 @@ import {
   PropTypes,
   ScrollView,
   TouchableHighlight,
-  AsyncStorage
+  AsyncStorage,
+  AppState
 } from 'react-native';
 
 
@@ -46,261 +47,271 @@ var CustomSceneConfig = Object.assign({}, BaseConfig, {
 const speedlist=[];
 
 class PageTwo extends Component {
-constructor(props) {
-  super(props)
-  this.state = {
-    routeCoordinates: [],
-    distanceTravelled: 0,
-    calcDistanceButton: false,
-    prevLatLng: {},
-    playPress : false,
-    stopPress : true,
-    speed : 0,
-    actyv : false,
-    TypeOF : 'REGULAR CARDIO',
-    PressBurger : false,
-    firstlatitude: 0,
-    firstlongitude : 0,
-    lastlatitude : 0,
-    lastlongitude : 0,
-    pressStop : 0,
-    coord : [],
-    Milsec : 0,
-    Milsec2 : 0,
-    Sec : 0,
-    Sec2 : 0,
-    min2 : 0,
-    min : 0,
-    check : false,
-    TimeTraning : 0,
-    i : 0,
-    pts : 0
+  constructor(props) {
+    super(props);
+    this.state = {
+      routeCoordinates: [],
+      distanceTravelled: 0,
+      calcDistanceButton: false,
+      prevLatLng: {},
+      playPress : false,
+      stopPress : true,
+      speed : 0,
+      actyv : false,
+      TypeOF : 'REGULAR CARDIO',
+      PressBurger : false,
+      firstlatitude: 0,
+      firstlongitude : 0,
+      lastlatitude : 0,
+      lastlongitude : 0,
+      pressStop : 0,
+      coord : [],
+      Milsec : 0,
+      Milsec2 : 0,
+      Sec : 0,
+      Sec2 : 0,
+      min2 : 0,
+      min : 0,
+      check : false,
+      TimeTraning : 0,
+      i : 0,
+      pts : 0
+    }
+    this._timer = this._timer.bind(this);
+    this._timeTraning = this._timeTraning.bind(this);
   }
-  this._timer = this._timer.bind(this);
-  this._timeTraning = this._timeTraning.bind(this);
-}
-_onChangePlay(){
 
-  if(this.state.playPress){
-    this.setState({
-      prevLatLng : {},
-    })
-  }
-  if(this.state.pressStop == 1 ){
-    this.setState({
+  _onChangePlay(){
+    if(this.state.playPress){
+      this.setState({
+        prevLatLng : {},
+      })
+    }
+    if(this.state.pressStop == 1 ){
+      this.setState({
         routeCoordinates:[],
         coord : [],
+      })
+    }
+    this.setState({
+      playPress : !this.state.playPress,
+      stopPress : false,
+      pressStop : 0,
     })
-  }
-  this.setState({
-    playPress : !this.state.playPress,
-    stopPress : false,
-    pressStop : 0,
-  })
 
-
-  if (!this.state.check ){
-    this.state.check = true;
-    this._timer();
-    this._timeTraning();
-  }
-}
-
-
-async onPress(arrayDataAndTime, arrayDistance) {
-  console.log(arrayDataAndTime)
-  console.log(JSON.stringify(arrayDistance))
-
-
-  try {
-    let response = await fetch("https://runner-pro.herokuapp.com/api/recordstest", {
-                            method: 'POST',
-                            headers: {
-                              'Accept': 'application/json',
-                              'Content-Type': 'application/json'
-                         },
-                            body:JSON.stringify ({
-                              data:{
-                                coordinates: arrayDistance
-                              },
-                           })
-                          });
-                          let res = response.text()
-                          console.log(res)
-                          console.log(response)
-  } catch(errors) {
-    console.log(errors)
+    if (!this.state.check ){
+      this.state.check = true;
+      this._timer();
+      this._timeTraning();
     }
   }
-_onPresStop(){
-  this.setState ({
-    TimeTraning : 0,
-    check : false,
-    Milsec : 0,
-    Sec : 0,
-    min : 0,
-    Milsec2 : 0,
-    Sec2 : 0,
-    min2 : 0,
 
-  })
- const arrayDataAndTime=[];
- const arrayDistance=[];
- const data={
-   type:this.state.TypeOF,
-   time: JSON.stringify(new Date),
- }
- const dis={
-   coordinates: this.state.coord,
-   speed:speedlist,
- }
+  async onPress(arrayDataAndTime, arrayDistance) {
+    console.log(arrayDataAndTime)
+    console.log(arrayDistance)
 
+    try {
+      let response = await fetch("https://runner-pro.herokuapp.com/new_one", {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body:JSON.stringify ({
+          data:{
+            time: arrayDataAndTime,
+            cords : arrayDistance,
+          },
+        })
+      });
+      console.log(response)
+                  //      let data = await response.Body.json();
+                    //    let parseTest = JSON.parse(date);
+                    //  console.log(parseTest)
+    } catch(errors) {
+      console.log(errors)
+    }
+  }
 
- arrayDataAndTime.push(data);
- arrayDistance.push(dis);
-  this.onPress(arrayDataAndTime,arrayDistance);
+  _onPresStop(){
+    this.setState ({
+      TimeTraning : 0,
+      check : false,
+      Milsec : 0,
+      Sec : 0,
+      min : 0,
+      Milsec2 : 0,
+      Sec2 : 0,
+      min2 : 0,
+    })
 
-  this.setState({
-    stopPress : true,
-    playPress : false,
-    distanceTravelled: 0,
-    prevLatLng: {},
-    pressStop : 1,
-  })
-  AsyncStorage.getItem('database').then((value)=>{
-                                       if(value !== null){
-                                       const d=JSON.parse(value);
-                                       d.push(dis)
-                                       AsyncStorage.setItem('database',JSON.stringify(d))
-                                       }
-                                       else{
-                                       AsyncStorage.setItem('database',JSON.stringify(dis))
-                                     }
-                                       })
-                  AsyncStorage.getItem('database').then((value) => {
-                  })
-}
+    const arrayDataAndTime=[];
+    const arrayDistance=[];
+    const data = {
+      type: this.state.TypeOF,
+      time: JSON.stringify(new Date),
+    }
 
- _onPressPlayButton(){
-   if(!this.state.playPress){
-   return (
-     <Image
-       source = {require('./images/_btn_play_2.png')}
-       style = {styles.btPlay}/>
-   );
- }else{
-   return (
-     <Image
-     style={styles.btPlay}
-     source={require('./images/_btn_pause_4.png')}/>
-   );
- }
- }
+    const dis = {
+      coordinates: this.state.coord,
+      speed: speedlist,
+      distance: this.state.distanceTravelled,
+    }
 
- _onRenderStop(){
-   if(!this.state.stopPress){
-     return(
-       <Image
-       source = {require('./images/btStop.png')}
-       style = {styles.btStop}/>
-     );
-   }
- }
+    arrayDataAndTime.push(data);
+    arrayDistance.push(dis);
+    this.onPress(arrayDataAndTime,arrayDistance);
 
+    this.setState({
+      stopPress : true,
+      playPress : false,
+      distanceTravelled: 0,
+      prevLatLng: {},
+      pressStop : 1,
+    })
 
+    AsyncStorage.getItem('database').then((value) => {
+      if (value !== null) {
+        const d = JSON.parse(value);
+        d.push(dis)
+        AsyncStorage.setItem('database', JSON.stringify(d))
+      } else {
+        AsyncStorage.setItem('database', JSON.stringify([dis]))
+      }
+    })
+    AsyncStorage.getItem('database').then((value) => {})
+  }
 
+  _onPressPlayButton(){
+      return (
+        <Image source = {this.state.playPress ?  require('./images/_btn_pause_4.png') : require('./images/_btn_play_2.png')}
+        style = {styles.btPlay}/>);
+  }
 
+  _onRenderStop() {
+    if(!this.state.stopPress){
+      return(
+        <Image source = {require('./images/btStop.png')}
+          style = {styles.btStop}/>
+      );
+    }
+  }
 
   componentDidMount() {
+    AppState.addEventListener('change', this._handleAppStateChange);
+    this.doWatch()
+
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
+    //navigator.geolocation.clearWatch(this.watchID);
+  }
+
+  doWatch(){
+    console.log("check 2")
     navigator.geolocation.getCurrentPosition(
       (position) => {},
       (error) => alert(error.message),
       {enableHighAccuracy: true, timeout: 1000, maximumAge: 1000, distanceFilter: 10}
     )
-    this.watchID = navigator.geolocation.watchPosition((position) => {
-      const { routeCoordinates, distanceTravelled , speed, coord } = this.state
-      const newLatLngs = {latitude: position.coords.latitude, longitude: position.coords.longitude }
-      const positionLatLngs = pick(position.coords, ['latitude', 'longitude'])
-      this.setState({
-      speed : position.coords.speed,
-      });
-      if (!this.state.stopPress){
-      this.setState({
-        routeCoordinates: routeCoordinates.concat(positionLatLngs),
-      });
+    this.watchID = navigator.geolocation.watchPosition(
+      (position) => {
+        const { routeCoordinates, distanceTravelled , speed, coord } = this.state
+        const newLatLngs = {latitude: position.coords.latitude, longitude: position.coords.longitude }
+        const positionLatLngs = pick(position.coords, ['latitude', 'longitude'])
+        this.setState({
+          speed : position.coords.speed,
+        });
+        if (!this.state.stopPress){
+          this.setState({
+            routeCoordinates: routeCoordinates.concat(positionLatLngs),
+          });
+        }
+        if (this.state.playPress){
+          coord.push(newLatLngs)
+          speedlist.push(position.coords.speed)
+          this.setState({
+            distanceTravelled: distanceTravelled + this.calcDistance(newLatLngs),
+            prevLatLng: newLatLngs,
+            lastlatitude : position.coords.latitude,
+            lastlongitude : position.coords.longitude,
+          })
+        }
+      },
+      (error) => alert(error.message),
+      {enableHighAccuracy: true, timeout: 1000, maximumAge: 0, distanceFilter: 5}
+    );
+
+  }
+
+  _handleAppStateChange = (nextAppState) => {
+    console.log(this.state.stopPress);
+    console.log("check 3")
+    if (nextAppState !== 'active' && this.state.stopPress) {
+      navigator.geolocation.clearWatch(this.watchID);
+      this.watchID = null;
+    } else {
+      if (this.watchID === null) {
+        console.log("check 4")
+        this.doWatch();
+      }
     }
-  if (this.state.playPress){
-      coord.push(newLatLngs)
-      speedlist.push(position.coords.speed)
-      this.setState({
-        distanceTravelled: distanceTravelled + this.calcDistance(newLatLngs),
-        prevLatLng: newLatLngs,
-        lastlatitude : position.coords.latitude,
-        lastlongitude : position.coords.longitude,
-      })
-}
-    },
-    (error) => alert(error.message),
-    {enableHighAccuracy: true, timeout: 1000, maximumAge: 0, distanceFilter: 5}
-  );
-
   }
 
-  componentWillUnmount() {
-    navigator.geolocation.clearWatch(this.watchID);
-  }
   calcDistance(newLatLng) {
     const { prevLatLng } = this.state
     return (haversine(prevLatLng, newLatLng) || 0)
   }
-_changeSelection(feed) {
+
+  _changeSelection(feed) {
     this.setState({ myChatsSelected: feed === 'my' });
     this.props.onChange(feed);
   }
 
-  _CangeACtivState(){
+  _CangeACtivState() {
     if (this.state.stopPress)
     this.setState({
       actyv : true,
     })
   }
 
-_onSelectACTYVITYLOG(){
-  this.props.navigator.replace({id: 3,});
-  this.setState({PressBurger : false});
-}
+  _onSelectACTYVITYLOG(){
+    this.props.navigator.replace({id: 3,});
+    this.setState({PressBurger : false});
+  }
 
-_onSeclectLOGOUT(){
-  this.state.check = false;
-  AsyncStorage.removeItem('databaseTOKEN');
-  LoginManager.logOut();
-  this.props.navigator.replace({id:1,});
-  this.setState({PressBurger :false});
-}
+  _onSeclectLOGOUT(){
+    this.state.check = false;
+    AsyncStorage.removeItem('databaseTOKEN');
+    LoginManager.logOut();
+    this.props.navigator.replace({id:1,});
+    this.setState({PressBurger :false});
+  }
 
-_onSeclectSCREENLAYOUT(){
-  this.props.navigator.replace({id:6,});
-  this.setState({PressBurger :false});
-}
+  _onSeclectSCREENLAYOUT(){
+    this.props.navigator.replace({id:6,});
+    this.setState({PressBurger :false});
+  }
 
-_renderBurger(){
-  if(this.state.PressBurger){
-    return(
-      <Image
-        source={require('./images/bg.png')}
-        style={styles.img2}>
-          <View style = {styles.container3}>
-            <View style={styles.navBar2}>
-              <Text style ={styles.TypeOFText2}> RUNNER PRO</Text>
+  _renderBurger(){
+    if(this.state.PressBurger){
+      return(
+        <Image
+          source={require('./images/bg.png')}
+          style={styles.img2}>
+            <View style = {styles.container3}>
+              <View style={styles.navBar2}>
+                <Text style ={styles.TypeOFText2}> RUNNER PRO</Text>
                 <View style ={styles.BarForBurger}>
                   <TouchableOpacity onPress={() => this.setState({PressBurger : false})}>
                     <Image
-                    source={require('./images/_close_white.png')}
-                    style ={styles.imgClose}/>
+                      source={require('./images/_close_white.png')}
+                      style ={styles.imgClose}/>
                   </TouchableOpacity>
                 </View>
               </View>
-              <TouchableOpacity  >
+              <TouchableOpacity>
                 <Text style = {styles.TypeOFText}>ACCOUNT</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => this._onSelectACTYVITYLOG()} >
@@ -312,17 +323,16 @@ _renderBurger(){
               <TouchableOpacity onPress={() => this._onSeclectLOGOUT()} >
                 <Text style = {styles.TypeOFText}>LOG OUT</Text>
               </TouchableOpacity>
-
           </View>
         </Image>
       );
     }
   }
 
-_onRenderMapView(){
-  if(this.state.pressStop == 1 && this.state.coord[0] != null ){
-    return(
-      <MapView
+  _onRenderMapView(){
+    if(this.state.pressStop == 1 && this.state.coord[0] != null ) {
+      return (
+        <MapView
         style={styles.map}
         mapType={'standard'}
         showsUserLocation={true}
@@ -340,37 +350,37 @@ _onRenderMapView(){
           strokeColor: '#7B88F7',
           lineWidth: 9,
         }]} />
-
-    );
-  }else{
-  return(  <MapView
-      style={styles.map}
-      mapType={'standard'}
-      showsUserLocation={true}
-      followUserLocation={true}
-      zoomEnable = {true}
-      scrollEnabled={true}
-      showsScale={true}
-      overlays={[{
-        coordinates: this.state.routeCoordinates,
-        strokeColor: '#460D80',
-        lineWidth: 9,
-      }]} />
-    );
+      );
+    } else {
+      return ( <MapView
+        style={styles.map}
+        mapType={'standard'}
+        showsUserLocation={true}
+        followUserLocation={true}
+        zoomEnable = {true}
+        scrollEnabled={true}
+        showsScale={true}
+        overlays={[{
+          coordinates: this.state.routeCoordinates,
+          strokeColor: '#460D80',
+          lineWidth: 9,
+        }]} />
+      );
+    }
   }
-}
 
- _timeTraning () {
+  _timeTraning () {
    var self =this;
    if ( this.state.check){
-       this.setState ({
-         TimeTraning : this.state.TimeTraning + 1
-       })
-       setTimeout(function () {
-         return (self._timeTraning())
-       }, 1000);
-     }
+     this.setState ({
+       TimeTraning : this.state.TimeTraning + 1
+     })
+     setTimeout(function () {
+       return (self._timeTraning())
+     }, 1000);
+   }
  }
+
  _timer (){
    var self = this;
    if(this.state.check){
@@ -398,56 +408,51 @@ _onRenderMapView(){
          min2 : this.state.min + 1
        })
      }
-       this.setState({
-         Milsec2 : this.state.Milsec2 + 1
-       });
-      setTimeout(function () {
-        return (self._timer())
-      }, 10);
+     this.setState({
+       Milsec2 : this.state.Milsec2 + 1
+     });
+     setTimeout(function () {
+       return (self._timer())
+     }, 10);
+   }
+ }
+
+  _RenderBonus (){
+    if (this.state.TimeTraning > 30){
+      return (
+        <Image
+          source = {require('./images/XImage.png')}
+          style = {styles.imageXPTS}>
+          <View style ={{flexDirection : 'row'}}>
+             <Text style = {styles.TextX}>X</Text>
+            <Text style = {styles.TextFactor}>2</Text>
+          </View>
+        </Image>
+      );
     }
- }
+  }
 
-_RenderBonus (){
- if (this.state.TimeTraning > 30){
-  return (
-    <Image
-      source = {require('./images/XImage.png')}
-      style = {styles.imageXPTS}>
-      <View style ={{flexDirection : 'row'}}>
-        <Text style = {styles.TextX}>X</Text>
-        <Text style = {styles.TextFactor}>2</Text>
-      </View>
-    </Image>
-  );
-}
-}
-
-_pts(){
-
- var pts = parseFloat(this.state.distanceTravelled*10).toFixed(0);
- var pts1 = 0;
- var pts2 = 0;
- if (this.state.TimeTraning > 30){
-   pts1 = pts1 +pts*2;
-     if (this.state.TimeTraning > 60)
-     {
+  _pts() {
+    var pts = parseFloat(this.state.distanceTravelled*10).toFixed(0);
+    var pts1 = 0;
+    var pts2 = 0;
+    if (this.state.TimeTraning > 30){
+      pts1 = pts1 +pts*2;
+      if (this.state.TimeTraning > 60) {
         pts1 = pts1 + 100;
-     }
-     if (this.state.TimeTraning > 90)
-     {
+      }
+      if (this.state.TimeTraning > 90) {
         pts1 = pts1 + 200;
-     }
- }
- if (this.state.TimeTraning/this.state.i > 30 ){
-   this.state.i = this.state.i + 1;
-   this.state.pts = pts1;
-   return pts1;
- }else  return this.state.pts;
+      }
+    }
+    if (this.state.TimeTraning/this.state.i > 30 ){
+      this.state.i = this.state.i + 1;
+      this.state.pts = pts1;
+      return pts1;
+    } else  return this.state.pts;
+  }
 
-
-}
-
-render() {
+  render() {
     return (
       <View style={styles.container}>
         {this._onRenderMapView()}
@@ -494,6 +499,7 @@ render() {
             <Image
               source = {require('./images/ReactangleBottom2.png')}
               style = {{width:width,height : height*0.372}}>
+
               <Text style = {styles.NomberOfMiles}>{parseFloat(this.state.distanceTravelled/1.6).toFixed(2)}</Text>
               <Text style = {styles.TextMiles}>MILE</Text>
             </Image>
@@ -729,7 +735,6 @@ const styles = StyleSheet.create({
     backgroundColor : 'transparent',
     fontFamily: 'Roboto-Regular',
     marginLeft : width*0.49,
-
   },
   TextNomberColories:{
     borderColor : '#979797',
