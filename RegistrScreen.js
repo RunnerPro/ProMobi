@@ -11,7 +11,8 @@ import {
   PropTypes,
   AppRegistry,
   ScrollView,
-  TextInput
+  TextInput,
+  AsyncStorage
 } from 'react-native';
 
 import TextField from 'react-native-md-textinput';
@@ -33,24 +34,36 @@ class RegistrScreen extends Component{
     }
   }
 
+  _handlePressId(Id) {
+    this.props.navigator.replace({id: Id,});
+  }
+
 async  _onPressGetStart(){
+  var self = this ;
   if (name != '' && password != '' && email != ''){
       try {
         let response = await fetch("https://runner-pro.herokuapp.com/api/users", {
-                                method: 'POST',
-                                headers: {
-                                  'Accept': 'application/json',
-                                  'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify ({
-                                  username : name,
-                                  email : email,
-                                  password : password
-                               })
-                              });
-                              let res = response.text()
-                              console.log(response)
-                              console.log(res)
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify ({
+            username : name,
+            email : email,
+            password : password,
+            })
+        });
+        let res = response.json()
+        console.log(res)
+        AsyncStorage.getItem('databaseTOKEN').then((value)=>{
+          if(value == null){
+            AsyncStorage.setItem('databaseTOKEN',JSON.stringify(res));
+            }
+          })
+          console.log(this)
+          console.log(self)
+          self._handlePressId(2)
       } catch(errors) {
         console.log(errors)
     }
@@ -68,36 +81,36 @@ _renderTextFild(){
         textBlurColor={'#460D80'}
         onChangeText={(text) => {
           name = text;
-         }}
-         labelStyle={{
-           color: '#9E9E9E',
-         }} />
-        <TextField
-          label={'Email'}
-          highlightColor={'#460D80'}
-          textFocusColor={'#460D80'}
-          textBlurColor={'#460D80'}
-          onChangeText={(text) => {
-            email = text;
-         }}
-         labelStyle={{
-           color: '#9E9E9E',
+        }}
+        labelStyle={{
+          color: '#9E9E9E',
+        }} />
+      <TextField
+        label={'Email'}
+        highlightColor={'#460D80'}
+        textFocusColor={'#460D80'}
+        textBlurColor={'#460D80'}
+        onChangeText={(text) => {
+          email = text;
+        }}
+        labelStyle={{
+          color: '#9E9E9E',
         }}/>
-        <TextField
-          label={'Password'}
-          highlightColor={'#460D80'}
-          textFocusColor={'#460D80'}
-          textBlurColor={'#460D80'}
-          secureTextEntry = {true}
-          onChangeText={(text) => {
-            password = text;
-           }}
-          labelStyle={{
-            color: '#9E9E9E',
-          }}/>
-      </View>
+      <TextField
+        label={'Password'}
+        highlightColor={'#460D80'}
+        textFocusColor={'#460D80'}
+        textBlurColor={'#460D80'}
+        secureTextEntry = {true}
+        onChangeText={(text) => {
+          password = text;
+        }}
+        labelStyle={{
+          color: '#9E9E9E',
+        }}/>
+    </View>
     )
-}
+  }
   render(){
     return(
       <Image
@@ -109,29 +122,28 @@ _renderTextFild(){
                 <TouchableOpacity onPress={() => this.props.navigator.replace({id: 7,})}>
                   <Image
                     source = {require('./images/policy.png')}
-                    style = {styles.imgPolicy}
-                    />
+                    style = {styles.imgPolicy}/>
                 </TouchableOpacity>
               <View style = {styles.BarForBack}>
                 <TouchableOpacity onPress={() => this.props.navigator.replace({id: 1,})}>
                   <Image
-                  source={require('./images/back.png')}
-                  style ={styles.imgBack}/>
+                    source={require('./images/back.png')}
+                    style ={styles.imgBack}/>
                 </TouchableOpacity>
               </View>
             </View>
             {this._renderTextFild()}
             <View style={styles.ViewForButton}>
-            <View style={styles.buttonGet}>
-              <TouchableOpacity onPress ={this._onPressGetStart} >
-                <View style={styles.buttomGet}>
-                  <Text style={styles.buttomGetText}>Get Start</Text>
-                </View>
-              </TouchableOpacity>
+              <View style={styles.buttonGet}>
+                <TouchableOpacity onPress ={this._onPressGetStart} >
+                  <View style={styles.buttomGet}>
+                    <Text style={styles.buttomGetText}>Get Start</Text>
+                  </View>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
-        </Image>
+      </Image>
     );
   }
 }
