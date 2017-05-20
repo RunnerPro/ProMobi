@@ -206,7 +206,7 @@ class PageTwo extends Component {
 
   componentWillUnmount() {
     AppState.removeEventListener('change', this._handleAppStateChange);
-    //navigator.geolocation.clearWatch(this.watchID);
+    navigator.geolocation.clearWatch(this.watchID);
   }
 
   doWatch(){
@@ -254,7 +254,7 @@ class PageTwo extends Component {
     } else {
       if (this.watchID !== null) {
         console.log("check 5")
-        this.doWatch();
+      //  this.doWatch();
       }
     }
   }

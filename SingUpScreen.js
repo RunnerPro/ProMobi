@@ -44,11 +44,11 @@ class SingUpScreen extends Component {
         }
         else{
           AccessToken.getCurrentAccessToken().then(
-                  (data) => {
-                  AsyncStorage.getItem('databaseTOKEN').then((value)=>{
-                    if(value == null){
-                      AsyncStorage.setItem('databaseTOKEN',JSON.stringify(data.accessToken));
-                    }
+            (data) => {
+              AsyncStorage.getItem('databaseTOKEN').then((value)=>{
+                if(value == null){
+                  AsyncStorage.setItem('databaseTOKEN',JSON.stringify(data.accessToken));
+                }
             });
             self._handlePressId(2);
         })
@@ -60,10 +60,10 @@ render() {
     <Image
       source = {require('./images/Rectangle.png')}
       style = {{width : width}}>
-      <View style={styles.container}>
-      <View style = {styles.navBar}>
+        <View style={styles.container}>
+        <View style = {styles.navBar}>
         <Text style = {styles.navBarText}> LOG IN</Text>
-        <TouchableOpacity onPress={() => this._handlePressId(7)}>
+          <TouchableOpacity onPress={() => this._handlePressId(7)}>
             <Image
               source = {require('./images/policy.png')}
               style={styles.imgPolicy}/>
@@ -71,28 +71,25 @@ render() {
         <View style = {styles.BarForBack}>
           <TouchableOpacity onPress={() => this._handlePressId(1)}>
             <Image
-            source={require('./images/back.png')}
-            style ={styles.imgBack}/>
+              source={require('./images/back.png')}
+              style ={styles.imgBack}/>
           </TouchableOpacity>
         </View>
       </View>
       <View style ={styles.Account}>
         <TextField
-
           label={'User Name'}
-           labelColor={'#000'}
+          labelColor={'#000'}
           highlightColor={'#460D80'}
           textFocusColor={'#460D80'}
           textBlurColor={'#460D80'}
           onChangeText={(text) => {
             name = text;
-       }}
-       labelStyle={{
-         color: '#9E9E9E',
-       }}
-        />
+          }}
+          labelStyle={{
+            color: '#9E9E9E',
+          }}/>
         <TextField
-
           label={'Password'}
           highlightColor={'#460D80'}
           textFocusColor={'#460D80'}
@@ -100,11 +97,10 @@ render() {
           secureTextEntry = {true}
           onChangeText={(text) => {
             password = text;
-       }}
+          }}
           labelStyle={{
-            color: '#9E9E9E',
-            }}
-           />
+          color: '#9E9E9E',
+          }} />
       </View>
       <View style ={{flex:2}}>
             <TouchableOpacity>
@@ -120,7 +116,7 @@ render() {
             <Text style={styles.text}>Forgot Password</Text>
             </View>
       </View>
-    </Image>
+  </Image>
     );
   }
 }
