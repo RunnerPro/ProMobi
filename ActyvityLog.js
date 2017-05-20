@@ -82,14 +82,47 @@ constructor(){
   }
 }
 
+_handlePressId(Id) {
+  this.props.navigator.replace({id: Id,});
+}
+
 render() {
   return (
     <View style={styles.container}>
-      <View style={styles.header}/>
+      <View style={styles.header}>
+      <View style={styles.viewForButtonAndText}>
+        <TouchableOpacity onPress ={() => this._handlePressId(2)}>
+          <Image
+            source = {require('./images/back.png')}
+            style = {styles.imgBack}/>
+        </TouchableOpacity>
+        <Text style={styles.textLog}>ACTIVITY LOG</Text>
+      </View>
+        <View style = {styles.viewForText}>
+          <Text style = {styles.Activities}>Activities</Text>
+          <Text style = {styles.Points}>Points</Text>
+        </View>
+        <View style = {styles.viewForNomber}>
+          <Text style = {styles.nomberActivities}>45</Text>
+          <Text style = {styles.nomberPoints}>576</Text>
+        </View>
+        <Image
+          source = {require('./images/Group 4.png')}
+          style = {styles.imgLine}/>
+        <Image
+          source = {require('./images/Group2.png')}
+          style = {styles.imgPol}/>
+        <Image
+          source = {require('./images/Rectangle 4.png')}
+          style = {styles.imgLevel}>
+            <Text style = {styles.textLevl}>LEVL 2</Text>
+        </Image>
+        <Text style = {styles.ptsToNextLevl}>233 pts. to Level 3</Text>
+      </View>
       <ProgressViewIOS
         style = {styles.progres}
-        progressTintColor = "purple"
-        progress = {0.7}/>
+        progressTintColor = '#674DCD'
+        progress = {0.5}/>
       <ScrollView style = {styles.scrollView}>
         <Text></Text>
       </ScrollView>
@@ -125,5 +158,111 @@ const styles = StyleSheet.create({
     position : 'absolute',
     top : height/5,
     marginTop : 5
+  },
+  imgPol : {
+    width : width/6,
+    height : height/9,
+    position : 'absolute',
+    top: height*0.06,
+    bottom: 0,
+    left:  width/2 - width/11,
+    right: 0
+  },
+  textLog : {
+    fontFamily: 'Roboto-Regular',
+    backgroundColor : 'transparent',
+    fontSize : 15,
+    marginLeft : width/2.65,
+    marginTop : height*0.009
+  },
+  viewForButtonAndText : {
+    flexDirection : 'row',
+    backgroundColor : 'transparent',
+    width: width,
+    height : height*0.05,
+    marginTop : height*0.025
+  },
+  imgBack : {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom:0 ,
+    position: 'absolute',
+    height:width/10,
+    width:width/9,
+    shadowColor: "#000000",
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
+    shadowOffset: {
+      height: 2,
+      width: 0
+    }
+  },
+  imgLine : {
+    width : width /3,
+    left: width / 3.1,
+    right: 0,
+    top: height/9,
+    bottom:0 ,
+    position: 'absolute',
+  },
+  imgLevel : {
+    width : width/9,
+    height : height /33,
+    position : 'absolute',
+    left : width /2.3,
+    top : height/6.9,
+    bottom : 0,
+    right : 0,
+    borderRadius : 2
+  },
+  textLevl : {
+    backgroundColor : 'transparent',
+    fontFamily : 'Roboto-Bold',
+    color : '#ffffff',
+    fontSize : 10,
+    marginTop : height*0.004,
+    marginHorizontal : width*0.01
+  },
+  ptsToNextLevl : {
+    backgroundColor : 'transparent',
+    marginTop : height/45,
+    fontSize : 10 ,
+    textAlign : 'center',
+    fontFamily : 'Roboto-Regular'
+  },
+  viewForText : {
+    flexDirection : 'row',
+    width: width,
+    height : height*0.04,
+    backgroundColor : 'transparent'
+  },
+  viewForNomber : {
+    flexDirection : 'row',
+    width: width,
+    height : height*0.04,
+    backgroundColor : 'transparent'
+  },
+  Activities : {
+    marginHorizontal: width/7,
+    fontFamily:'Roboto-Regular',
+    marginTop : height*0.01
+  },
+  Points : {
+    marginHorizontal : width/4,
+    fontFamily:'Roboto-Regular',
+    marginTop : height*0.01
+  },
+  nomberActivities : {
+    marginLeft:width/6,
+    fontFamily: 'Roboto-Medium',
+    fontSize : 25,
+    marginTop : -height*0.01
+  },
+  nomberPoints : {
+    marginLeft: width/2.2,
+    fontFamily: 'Roboto-Medium',
+    fontSize : 25,
+    marginTop : -height*0.01
   }
 })
