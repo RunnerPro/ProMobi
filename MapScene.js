@@ -76,7 +76,7 @@ class PageTwo extends Component {
       TimeTraning : 0,
       i : 0,
       pts : 0,
-      appState: AppState.currentState
+      startTracking : false
     }
     this._timer = this._timer.bind(this);
     this._timeTraning = this._timeTraning.bind(this);
@@ -109,7 +109,7 @@ class PageTwo extends Component {
 
   async onPress(arrayDataAndTime, arrayDistance) {
     console.log(arrayDataAndTime)
-    console.log(arrayDistance)
+    console.log(JSON.stringify(arrayDistance))
 
     try {
       let response = await fetch("https://runner-pro.herokuapp.com/new_one", {
@@ -158,7 +158,7 @@ class PageTwo extends Component {
       speed: speedlist,
       distance: this.state.distanceTravelled,
     }
-
+    this.state.startTracking = false;
     arrayDataAndTime.push(data);
     arrayDistance.push(dis);
     this.onPress(arrayDataAndTime,arrayDistance);
@@ -198,63 +198,71 @@ class PageTwo extends Component {
     }
   }
 
-  componentDidMount() {
-    AppState.addEventListener('change', this._handleAppStateChange);
-    this.doWatch()
+  _handlePressId(Id) {
+    navigator.geolocation.clearWatch(this.watchID);
+    this.props.navigator.replace({id: Id,});
+  }
 
+  componentDidMount() {
+  //  console.log("forground")
+    this.doWatch()
+    AppState.addEventListener('change', this._handleAppStateChange);
   }
 
   componentWillUnmount() {
+  //  console.log("backgroundColor")
     AppState.removeEventListener('change', this._handleAppStateChange);
     navigator.geolocation.clearWatch(this.watchID);
   }
 
   doWatch(){
-    navigator.geolocation.getCurrentPosition(
-      (position) => {},
-      (error) => alert(error.message),
-      {enableHighAccuracy: true, timeout: 1000, maximumAge: 1000, distanceFilter: 10}
-    )
-    this.watchID = navigator.geolocation.watchPosition(
-      (position) => {
-        const { routeCoordinates, distanceTravelled , speed, coord } = this.state
-        const newLatLngs = {latitude: position.coords.latitude, longitude: position.coords.longitude }
-        const positionLatLngs = pick(position.coords, ['latitude', 'longitude'])
-        this.setState({
-          speed : position.coords.speed,
-        });
-        if (!this.state.stopPress){
-          this.setState({
-            routeCoordinates: routeCoordinates.concat(positionLatLngs),
-          });
-        }
-        if (this.state.playPress){
-          coord.push(newLatLngs)
-          speedlist.push(position.coords.speed)
-          this.setState({
-            distanceTravelled: distanceTravelled + this.calcDistance(newLatLngs),
-            prevLatLng: newLatLngs,
-            lastlatitude : position.coords.latitude,
-            lastlongitude : position.coords.longitude,
-          })
-        }
-      },
-      (error) => alert(error.message),
-      {enableHighAccuracy: true, timeout: 1000, maximumAge: 0, distanceFilter: 5}
-    );
+    if (!this.state.startTracking){
+      this.state.startTracking = true;
+      navigator.geolocation.getCurrentPosition(
+        (position) => {},
+        (error) => alert(error.message),
+        {enableHighAccuracy: true, timeout: 1000, maximumAge: 1000, distanceFilter: 10}
+      )
+      this.watchID = navigator.geolocation.watchPosition(
+        (position) => {
+          const { routeCoordinates, distanceTravelled , speed, coord } = this.state
+          const newLatLngs = {latitude: position.coords.latitude, longitude: position.coords.longitude }
+          const positionLatLngs = pick(position.coords, ['latitude', 'longitude'])
+
+          if (!this.state.stopPress){
+            this.setState({
+              routeCoordinates: routeCoordinates.concat(positionLatLngs),
+            });
+            this.setState({
+              speed : position.coords.speed,
+            });
+          }
+          if (this.state.playPress){
+            coord.push(newLatLngs)
+            speedlist.push(position.coords.speed)
+            this.setState({
+              distanceTravelled: distanceTravelled + this.calcDistance(newLatLngs),
+              prevLatLng: newLatLngs,
+              lastlatitude : position.coords.latitude,
+              lastlongitude : position.coords.longitude,
+            })
+          }
+        },
+        (error) => alert(error.message),
+        {enableHighAccuracy: true, timeout: 1000, maximumAge: 0, distanceFilter: 5}
+      );
+    }
   }
 
   _handleAppStateChange = (nextAppState) => {
-    console.log(this.state.stopPress);
-     this.setState({appState: nextAppState});
-     console.log(this.state.appState)
-    if (nextAppState !== 'active' && this.state.stopPress) {
+  //   console.log(this.state.stopPress)
+    if (nextAppState != 'active' && this.state.stopPress) {
       navigator.geolocation.clearWatch(this.watchID);
       this.watchID = null;
     } else {
       if (this.watchID !== null) {
-        console.log("check 5")
-      //  this.doWatch();
+      //  console.log(this.watchID)
+        this.doWatch();
       }
     }
   }
@@ -277,7 +285,7 @@ class PageTwo extends Component {
   }
 
   _onSelectACTYVITYLOG(){
-    this.props.navigator.replace({id: 3,});
+    this._handlePressId(3);
     this.setState({PressBurger : false});
   }
 
@@ -285,13 +293,14 @@ class PageTwo extends Component {
     this.state.check = false;
     AsyncStorage.removeItem('databaseTOKEN');
     LoginManager.logOut();
-    this.props.navigator.replace({id:1,});
     this.setState({PressBurger :false});
+    this._handlePressId(1);
+
   }
 
   _onSeclectSCREENLAYOUT(){
-    this.props.navigator.replace({id:6,});
     this.setState({PressBurger :false});
+    this._handlePressId(6);
   }
 
   _renderBurger(){
@@ -479,7 +488,7 @@ class PageTwo extends Component {
                 </View>
 
               </Image>
-              <TouchableOpacity style={styles.TouchPolygon}>
+              <TouchableOpacity style={styles.TouchPolygon} onPress ={() =>  this._handlePressId(3)}>
                 <Image
                   source ={require('./images/Polygon.png')}
                   style = {styles.imgPolygon}>

@@ -244,14 +244,16 @@ const styles = StyleSheet.create({
     backgroundColor : 'transparent'
   },
   Activities : {
-    marginHorizontal: width/7,
+    marginLeft: width/7,
     fontFamily:'Roboto-Regular',
-    marginTop : height*0.01
+    marginTop : height*0.01,
+    color : '#979797'
   },
   Points : {
-    marginHorizontal : width/4,
+    marginLeft : width/2.5,
     fontFamily:'Roboto-Regular',
-    marginTop : height*0.01
+    marginTop : height*0.01,
+    color : '#979797'
   },
   nomberActivities : {
     marginLeft:width/6,
