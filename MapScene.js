@@ -80,11 +80,11 @@ class PageTwo extends Component {
       pts : 0,
       startTracking : false,
       startCheck : false
+
     }
     this._timer = this._timer.bind(this);
     this._timeTraning = this._timeTraning.bind(this);
   }
-
   _onChangePlay(){
     if(this.state.playPress){
       this.setState({
@@ -224,8 +224,9 @@ class PageTwo extends Component {
   //  console.log("forground")
     this.doWatch()
     AppState.addEventListener('change', this._handleAppStateChange);
-  }
 
+  }
+  
   componentWillUnmount() {
   //  console.log("backgroundColor")
     AppState.removeEventListener('change', this._handleAppStateChange);
@@ -284,6 +285,7 @@ class PageTwo extends Component {
     }
   }
 
+
   calcDistance(newLatLng) {
     const { prevLatLng } = this.state
     return (haversine(prevLatLng, newLatLng) || 0)
@@ -300,7 +302,7 @@ class PageTwo extends Component {
       actyv : true,
     })
   }
-
+  
   _onSelectACTYVITYLOG(){
     this._handlePressId(3);
     this.setState({PressBurger : false});
@@ -318,6 +320,7 @@ class PageTwo extends Component {
   _onSeclectSCREENLAYOUT(){
     this.setState({PressBurger :false});
     this._handlePressId(6);
+
   }
 
   _renderBurger(){
@@ -457,7 +460,7 @@ class PageTwo extends Component {
       );
     }
   }
-
+  
   _pts() {
     var pts = parseFloat(this.state.distanceTravelled*10).toFixed(0);
     var pts1 = 0;
@@ -477,7 +480,6 @@ class PageTwo extends Component {
       return pts1;
     } else  return this.state.pts;
   }
-
   render() {
     return (
       <View style={styles.container}>

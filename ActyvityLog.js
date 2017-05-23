@@ -15,11 +15,16 @@ import {
   ProgressViewIOS
 } from 'react-native';
 
+
 const { width, height } = Dimensions.get('window')
 
 
 export default class ActyvityLog extends Component{
 /*  constructor(){
+
+export default class ActyvityLog extends Component{
+  constructor(){
+
     super()
     this.state = {
       list: '',
@@ -36,7 +41,6 @@ export default class ActyvityLog extends Component{
       console.log(err)
     }
   }
-
   parseData(){
     if ( this.state.list ) {
       return this.state.list.map((data,i) =>  {
@@ -56,7 +60,6 @@ export default class ActyvityLog extends Component{
       })
     }
   }
-
   render(){
     return(
       <View style={styles.container}>
@@ -81,6 +84,7 @@ constructor(){
     progres : 0,
   }
 }
+
 
 _handlePressId(Id) {
   this.props.navigator.replace({id: Id,});
