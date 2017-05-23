@@ -147,7 +147,7 @@ class PageTwo extends Component {
     }
   }
 
-  _onPresStop(){
+  _stopAll(){
     this.setState ({
       TimeTraning : 0,
       check : false,
@@ -159,7 +159,17 @@ class PageTwo extends Component {
       min2 : 0,
       startCheck : false ,
     })
+    this.setState({
+      stopPress : true,
+      playPress : false,
+      distanceTravelled: 0,
+      prevLatLng: {},
+      pressStop : 1,
+    })
+  }
 
+  _onPresStop(){
+    this._stopAll()
     const arrayDataAndTime=[];
     const arrayDistance=[];
     const data = {
@@ -176,14 +186,6 @@ class PageTwo extends Component {
     arrayDataAndTime.push(data);
     arrayDistance.push(dis);
     this.onPress(arrayDataAndTime,arrayDistance);
-
-    this.setState({
-      stopPress : true,
-      playPress : false,
-      distanceTravelled: 0,
-      prevLatLng: {},
-      pressStop : 1,
-    })
 
     AsyncStorage.getItem('database').then((value) => {
       if (value !== null) {
@@ -213,6 +215,7 @@ class PageTwo extends Component {
   }
 
   _handlePressId(Id) {
+    this._stopAll()
     navigator.geolocation.clearWatch(this.watchID);
     this.props.navigator.replace({id: Id,});
   }
