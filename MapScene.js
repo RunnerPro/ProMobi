@@ -45,6 +45,8 @@ var CustomSceneConfig = Object.assign({}, BaseConfig, {
   }
 });
 const speedlist=[];
+var token = [];
+var tk = ""
 
 class PageTwo extends Component {
   constructor(props) {
@@ -76,7 +78,8 @@ class PageTwo extends Component {
       TimeTraning : 0,
       i : 0,
       pts : 0,
-      startTracking : false
+      startTracking : false,
+      startCheck : false
     }
     this._timer = this._timer.bind(this);
     this._timeTraning = this._timeTraning.bind(this);
@@ -98,6 +101,7 @@ class PageTwo extends Component {
       playPress : !this.state.playPress,
       stopPress : false,
       pressStop : 0,
+      startCheck : !this.state.startCheck,
     })
 
     if (!this.state.check ){
@@ -108,24 +112,33 @@ class PageTwo extends Component {
   }
 
   async onPress(arrayDataAndTime, arrayDistance) {
-    console.log(arrayDataAndTime)
-    console.log(JSON.stringify(arrayDistance))
 
+    AsyncStorage.getItem('database').then((value) => {
+      console.log(JSON.parse(value))
+    })
+    //console.log(arrayDataAndTime)
+    //console.log(JSON.stringify(arrayDistance))
+    AsyncStorage.getItem('databaseTOKEN').then((value)=>{
+        token = JSON.parse(value)
+        token = token._65.token
+      //  console.log(token)
+      })
     try {
-      let response = await fetch("https://runner-pro.herokuapp.com/new_one", {
+      let response = await fetch("https://runner-pro.herokuapp.com/api/new_record", {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
+          'Authorization' : 'eyJpYXQiOjE0OTU0NzcxODYsImV4cCI6MTQ5NTQ4MzE4NiwiYWxnIjoiSFMyNTYifQ.eyJpZCI6Mn0.AUrydj4SaJgr3AhyLDxZWBhJzBhSLXImLRBoipNUtOQ',
         },
         body:JSON.stringify ({
-          data:{
-            time: arrayDataAndTime,
-            cords : arrayDistance,
-          },
+            //time: arrayDataAndTime,
+            coordinates : arrayDistance,
         })
       });
       console.log(response)
+      let res = response.text()
+      console.log(res)
                   //      let data = await response.Body.json();
                     //    let parseTest = JSON.parse(date);
                     //  console.log(parseTest)
@@ -144,6 +157,7 @@ class PageTwo extends Component {
       Milsec2 : 0,
       Sec2 : 0,
       min2 : 0,
+      startCheck : false ,
     })
 
     const arrayDataAndTime=[];
@@ -174,7 +188,7 @@ class PageTwo extends Component {
     AsyncStorage.getItem('database').then((value) => {
       if (value !== null) {
         const d = JSON.parse(value);
-        d.push(dis)
+        d.push([dis])
         AsyncStorage.setItem('database', JSON.stringify(d))
       } else {
         AsyncStorage.setItem('database', JSON.stringify([dis]))
@@ -190,7 +204,7 @@ class PageTwo extends Component {
   }
 
   _onRenderStop() {
-    if(!this.state.stopPress){
+    if(!this.state.stopPress && !this.state.startCheck){
       return(
         <Image source = {require('./images/btStop.png')}
           style = {styles.btStop}/>

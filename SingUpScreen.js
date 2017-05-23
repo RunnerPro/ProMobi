@@ -46,6 +46,7 @@ class SingUpScreen extends Component {
             password : password
           })
         })
+        console.log(response)
         let res = response.json()
         console.log(res)
         AsyncStorage.getItem('databaseTOKEN').then((value)=>{
