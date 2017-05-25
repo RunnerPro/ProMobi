@@ -7,10 +7,12 @@
     "test": "jest"
   },
   "dependencies": {
+    "haversine": "^1.0.2",
     "lodash.pick": "^4.4.0",
     "react": "15.4.2",
     "react-native": "0.42.0",
     "react-native-fbsdk": "^0.5.0",
+    "react-native-md-textinput": "^2.0.4",
     "react-native-splash-screen": "^2.0.0"
   },
   "devDependencies": {

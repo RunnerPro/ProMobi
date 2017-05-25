@@ -11,14 +11,12 @@ import {
   PropTypes,
   AsyncStorage,
   TextInput
-
 } from 'react-native';
 
 import PageOne from './loadingScene'
 var SCREEN_WIDTH = require('Dimensions').get('window').width;
 var BaseConfig = Navigator.SceneConfigs.FloatFromRight;
 const { width, height } = Dimensions.get('window');
-
 import TextField from 'react-native-md-textinput';
 import FBSDK , {LoginManager ,LoginButton, AccessToken} from 'react-native-fbsdk';
 
@@ -27,14 +25,41 @@ var password = ''
 class SingUpScreen extends Component {
   constructor(props) {
     super(props);
-    this.inputs = {
-    };
     this._TestRegistration = this._TestRegistration.bind(this);
   }
 
     _handlePressId(Id) {
       this.props.navigator.replace({id: Id,});
     }
+
+  async _LogUp(self){
+    if (name != '' && password != ''){
+      try {
+        let response = await fetch("https://runner-pro.herokuapp.com/api/token",{
+          method: 'POST',
+          headers: {
+            'Accept' : 'application/json',
+            'Content-Type' : 'application/json'
+          },
+          body: JSON.stringify({
+            username : name ,
+            password : password
+          })
+        })
+        console.log(response)
+        let res = response.json()
+        console.log(res)
+        AsyncStorage.getItem('databaseTOKEN').then((value)=>{
+          if(value == null){
+            AsyncStorage.setItem('databaseTOKEN',JSON.stringify(res));
+            }
+          })
+          self.props.navigator.replace({id: 2,})
+      }catch(error){
+
+      }
+    }
+  }
 
   _TestRegistration(){
     var self = this;
@@ -44,11 +69,11 @@ class SingUpScreen extends Component {
         }
         else{
           AccessToken.getCurrentAccessToken().then(
-                  (data) => {
-                  AsyncStorage.getItem('databaseTOKEN').then((value)=>{
-                    if(value == null){
-                      AsyncStorage.setItem('databaseTOKEN',JSON.stringify(data.accessToken));
-                    }
+            (data) => {
+            AsyncStorage.getItem('databaseTOKEN').then((value)=>{
+              if(value == null){
+                AsyncStorage.setItem('databaseTOKEN',JSON.stringify(data.accessToken));
+              }
             });
             self._handlePressId(2);
         })
@@ -61,9 +86,9 @@ render() {
       source = {require('./images/Rectangle.png')}
       style = {{width : width}}>
       <View style={styles.container}>
-      <View style = {styles.navBar}>
-        <Text style = {styles.navBarText}> LOG IN</Text>
-        <TouchableOpacity onPress={() => this._handlePressId(7)}>
+        <View style = {styles.navBar}>
+          <Text style = {styles.navBarText}> LOG IN</Text>
+          <TouchableOpacity onPress={() => this._handlePressId(7)}>
             <Image
               source = {require('./images/policy.png')}
               style={styles.imgPolicy}/>
@@ -71,61 +96,56 @@ render() {
         <View style = {styles.BarForBack}>
           <TouchableOpacity onPress={() => this._handlePressId(1)}>
             <Image
-            source={require('./images/back.png')}
-            style ={styles.imgBack}/>
+              source={require('./images/back.png')}
+              style ={styles.imgBack}/>
           </TouchableOpacity>
         </View>
       </View>
-      <View style ={styles.Account}>
-        <TextField
-
-          label={'User Name'}
-           labelColor={'#000'}
-          highlightColor={'#460D80'}
-          textFocusColor={'#460D80'}
-          textBlurColor={'#460D80'}
-          onChangeText={(text) => {
-            name = text;
-       }}
-       labelStyle={{
-         color: '#9E9E9E',
-       }}
-        />
-        <TextField
-
-          label={'Password'}
-          highlightColor={'#460D80'}
-          textFocusColor={'#460D80'}
-          textBlurColor={'#460D80'}
-          secureTextEntry = {true}
-          onChangeText={(text) => {
-            password = text;
-       }}
-          labelStyle={{
-            color: '#9E9E9E',
+        <View style ={styles.Account}>
+          <TextField
+            label={'User Name'}
+            labelColor={'#000'}
+            highlightColor={'#460D80'}
+            textFocusColor={'#460D80'}
+            textBlurColor={'#460D80'}
+            onChangeText={(text) => {
+              name = text;
             }}
-           />
-      </View>
-      <View style ={{flex:2}}>
-            <TouchableOpacity>
-              <View style={styles.buttomGet}>
-                <Text style={styles.buttomGetText}>Log up</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={this._TestRegistration} >
-                <View style={styles.buttonSingUpWithFacebook}>
-                  <Text style={styles.buttomGetText}>Log with Facebook</Text>
-                </View>
-              </TouchableOpacity>
-            <Text style={styles.text}>Forgot Password</Text>
+            labelStyle={{
+              color: '#9E9E9E',
+            }}/>
+          <TextField
+            label={'Password'}
+            highlightColor={'#460D80'}
+            textFocusColor={'#460D80'}
+            textBlurColor={'#460D80'}
+            secureTextEntry = {true}
+            onChangeText={(text) => {
+              password = text;
+            }}
+            labelStyle={{
+              color: '#9E9E9E',
+            }}/>
+        </View>
+        <View style ={{flex:2}}>
+          <TouchableOpacity onPress ={() => this._LogUp(this)}>
+            <View style={styles.buttomGet}>
+              <Text style={styles.buttomGetText}>Log up</Text>
             </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._TestRegistration} >
+            <View style={styles.buttonSingUpWithFacebook}>
+              <Text style={styles.buttomGetText}>Log with Facebook</Text>
+            </View>
+          </TouchableOpacity>
+          <Text style={styles.text}>Forgot Password</Text>
+        </View>
       </View>
     </Image>
     );
   }
 }
 const styles = StyleSheet.create({
-
   imgPolicy:{
     height:width/9,
     width:width/9,
@@ -154,7 +174,6 @@ const styles = StyleSheet.create({
     alignItems : 'center',
     padding:10,
     paddingTop: 80,
-
   },
   buttomGetText: {
     fontSize: 15,
@@ -217,7 +236,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-
   },
   imgBack:{
     left: 0,

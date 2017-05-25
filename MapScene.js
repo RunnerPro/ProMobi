@@ -13,7 +13,8 @@ import {
   PropTypes,
   ScrollView,
   TouchableHighlight,
-  AsyncStorage
+  AsyncStorage,
+  AppState
 } from 'react-native';
 
 
@@ -44,6 +45,8 @@ var CustomSceneConfig = Object.assign({}, BaseConfig, {
   }
 });
 const speedlist=[];
+var token = [];
+var tk = ""
 
 class PageTwo extends Component {
   constructor(props) {
@@ -74,12 +77,14 @@ class PageTwo extends Component {
       check : false,
       TimeTraning : 0,
       i : 0,
-      pts : 0
+      pts : 0,
+      startTracking : false,
+      startCheck : false
+
     }
     this._timer = this._timer.bind(this);
     this._timeTraning = this._timeTraning.bind(this);
   }
-  
   _onChangePlay(){
     if(this.state.playPress){
       this.setState({
@@ -96,34 +101,44 @@ class PageTwo extends Component {
       playPress : !this.state.playPress,
       stopPress : false,
       pressStop : 0,
+      startCheck : !this.state.startCheck,
     })
-    
+
     if (!this.state.check ){
       this.state.check = true;
       this._timer();
       this._timeTraning();
     }
   }
-  
+
   async onPress(arrayDataAndTime, arrayDistance) {
-    console.log(arrayDataAndTime)
-    console.log(arrayDistance)
-    
+
+    AsyncStorage.getItem('database').then((value) => {
+      console.log(JSON.parse(value))
+    })
+    //console.log(arrayDataAndTime)
+    //console.log(JSON.stringify(arrayDistance))
+    AsyncStorage.getItem('databaseTOKEN').then((value)=>{
+        token = JSON.parse(value)
+        token = token._65.token
+      //  console.log(token)
+      })
     try {
-      let response = await fetch("https://runner-pro.herokuapp.com/new_one", {
+      let response = await fetch("https://runner-pro.herokuapp.com/api/new_record", {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
+          'Authorization' : 'eyJpYXQiOjE0OTU0NzcxODYsImV4cCI6MTQ5NTQ4MzE4NiwiYWxnIjoiSFMyNTYifQ.eyJpZCI6Mn0.AUrydj4SaJgr3AhyLDxZWBhJzBhSLXImLRBoipNUtOQ',
         },
         body:JSON.stringify ({
-          data:{
-            time: arrayDataAndTime,
-            cords : arrayDistance,
-          },
+            //time: arrayDataAndTime,
+            coordinates : arrayDistance,
         })
       });
       console.log(response)
+      let res = response.text()
+      console.log(res)
                   //      let data = await response.Body.json();
                     //    let parseTest = JSON.parse(date);
                     //  console.log(parseTest)
@@ -131,8 +146,8 @@ class PageTwo extends Component {
       console.log(errors)
     }
   }
-  
-  _onPresStop(){
+
+  _stopAll(){
     this.setState ({
       TimeTraning : 0,
       check : false,
@@ -142,25 +157,8 @@ class PageTwo extends Component {
       Milsec2 : 0,
       Sec2 : 0,
       min2 : 0,
+      startCheck : false ,
     })
-    
-    const arrayDataAndTime=[];
-    const arrayDistance=[];
-    const data = { 
-      type: this.state.TypeOF,
-      time: JSON.stringify(new Date),
-    }
-    
-    const dis = {
-      coordinates: this.state.coord,
-      speed: speedlist,
-      distance: this.state.distanceTravelled,
-    }
-    
-    arrayDataAndTime.push(data);
-    arrayDistance.push(dis);
-    this.onPress(arrayDataAndTime,arrayDistance);
-    
     this.setState({
       stopPress : true,
       playPress : false,
@@ -168,11 +166,31 @@ class PageTwo extends Component {
       prevLatLng: {},
       pressStop : 1,
     })
-    
+  }
+
+  _onPresStop(){
+    this._stopAll()
+    const arrayDataAndTime=[];
+    const arrayDistance=[];
+    const data = {
+      type: this.state.TypeOF,
+      time: JSON.stringify(new Date),
+    }
+
+    const dis = {
+      coordinates: this.state.coord,
+      speed: speedlist,
+      distance: this.state.distanceTravelled,
+    }
+    this.state.startTracking = false;
+    arrayDataAndTime.push(data);
+    arrayDistance.push(dis);
+    this.onPress(arrayDataAndTime,arrayDistance);
+
     AsyncStorage.getItem('database').then((value) => {
       if (value !== null) {
         const d = JSON.parse(value);
-        d.push(dis)
+        d.push([dis])
         AsyncStorage.setItem('database', JSON.stringify(d))
       } else {
         AsyncStorage.setItem('database', JSON.stringify([dis]))
@@ -180,71 +198,104 @@ class PageTwo extends Component {
     })
     AsyncStorage.getItem('database').then((value) => {})
   }
-  
+
   _onPressPlayButton(){
       return (
         <Image source = {this.state.playPress ?  require('./images/_btn_pause_4.png') : require('./images/_btn_play_2.png')}
         style = {styles.btPlay}/>);
   }
-  
+
   _onRenderStop() {
-    if(!this.state.stopPress){
+    if(!this.state.stopPress && !this.state.startCheck){
       return(
         <Image source = {require('./images/btStop.png')}
           style = {styles.btStop}/>
       );
     }
   }
-  
+
+  _handlePressId(Id) {
+    this._stopAll()
+    navigator.geolocation.clearWatch(this.watchID);
+    this.props.navigator.replace({id: Id,});
+  }
+
   componentDidMount() {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {},
-      (error) => alert(error.message),
-      {enableHighAccuracy: true, timeout: 1000, maximumAge: 1000, distanceFilter: 10}
-    )
-    this.watchID = navigator.geolocation.watchPosition(
-      (position) => {
-        const { routeCoordinates, distanceTravelled , speed, coord } = this.state
-        const newLatLngs = {latitude: position.coords.latitude, longitude: position.coords.longitude }
-        const positionLatLngs = pick(position.coords, ['latitude', 'longitude'])
-        this.setState({
-          speed : position.coords.speed,
-        });
-        if (!this.state.stopPress){
-          this.setState({
-            routeCoordinates: routeCoordinates.concat(positionLatLngs),
-          });
-        }
-        if (this.state.playPress){
-          coord.push(newLatLngs)
-          speedlist.push(position.coords.speed)
-          this.setState({
-            distanceTravelled: distanceTravelled + this.calcDistance(newLatLngs),
-            prevLatLng: newLatLngs,
-            lastlatitude : position.coords.latitude,
-            lastlongitude : position.coords.longitude,
-          })
-        }
-      },
-      (error) => alert(error.message),
-      {enableHighAccuracy: true, timeout: 1000, maximumAge: 0, distanceFilter: 5}
-    );
+  //  console.log("forground")
+    this.doWatch()
+    AppState.addEventListener('change', this._handleAppStateChange);
+
   }
   
   componentWillUnmount() {
+  //  console.log("backgroundColor")
+    AppState.removeEventListener('change', this._handleAppStateChange);
     navigator.geolocation.clearWatch(this.watchID);
   }
-  
+
+  doWatch(){
+    if (!this.state.startTracking){
+      this.state.startTracking = true;
+      navigator.geolocation.getCurrentPosition(
+        (position) => {},
+        (error) => alert(error.message),
+        {enableHighAccuracy: true, timeout: 1000, maximumAge: 1000, distanceFilter: 10}
+      )
+      this.watchID = navigator.geolocation.watchPosition(
+        (position) => {
+          const { routeCoordinates, distanceTravelled , speed, coord } = this.state
+          const newLatLngs = {latitude: position.coords.latitude, longitude: position.coords.longitude }
+          const positionLatLngs = pick(position.coords, ['latitude', 'longitude'])
+
+          if (!this.state.stopPress){
+            this.setState({
+              routeCoordinates: routeCoordinates.concat(positionLatLngs),
+            });
+            this.setState({
+              speed : position.coords.speed,
+            });
+          }
+          if (this.state.playPress){
+            coord.push(newLatLngs)
+            speedlist.push(position.coords.speed)
+            this.setState({
+              distanceTravelled: distanceTravelled + this.calcDistance(newLatLngs),
+              prevLatLng: newLatLngs,
+              lastlatitude : position.coords.latitude,
+              lastlongitude : position.coords.longitude,
+            })
+          }
+        },
+        (error) => alert(error.message),
+        {enableHighAccuracy: true, timeout: 1000, maximumAge: 0, distanceFilter: 5}
+      );
+    }
+  }
+
+  _handleAppStateChange = (nextAppState) => {
+  //   console.log(this.state.stopPress)
+    if (nextAppState != 'active' && this.state.stopPress) {
+      navigator.geolocation.clearWatch(this.watchID);
+      this.watchID = null;
+    } else {
+      if (this.watchID !== null) {
+      //  console.log(this.watchID)
+        this.doWatch();
+      }
+    }
+  }
+
+
   calcDistance(newLatLng) {
     const { prevLatLng } = this.state
     return (haversine(prevLatLng, newLatLng) || 0)
   }
-  
+
   _changeSelection(feed) {
     this.setState({ myChatsSelected: feed === 'my' });
     this.props.onChange(feed);
   }
-  
+
   _CangeACtivState() {
     if (this.state.stopPress)
     this.setState({
@@ -253,7 +304,7 @@ class PageTwo extends Component {
   }
   
   _onSelectACTYVITYLOG(){
-    this.props.navigator.replace({id: 3,});
+    this._handlePressId(3);
     this.setState({PressBurger : false});
   }
 
@@ -261,13 +312,15 @@ class PageTwo extends Component {
     this.state.check = false;
     AsyncStorage.removeItem('databaseTOKEN');
     LoginManager.logOut();
-    this.props.navigator.replace({id:1,});
     this.setState({PressBurger :false});
+    this._handlePressId(1);
+
   }
-  
+
   _onSeclectSCREENLAYOUT(){
-    this.props.navigator.replace({id:6,});
     this.setState({PressBurger :false});
+    this._handlePressId(6);
+
   }
 
   _renderBurger(){
@@ -304,7 +357,7 @@ class PageTwo extends Component {
       );
     }
   }
-  
+
   _onRenderMapView(){
     if(this.state.pressStop == 1 && this.state.coord[0] != null ) {
       return (
@@ -344,7 +397,7 @@ class PageTwo extends Component {
       );
     }
   }
-  
+
   _timeTraning () {
    var self =this;
    if ( this.state.check){
@@ -356,7 +409,7 @@ class PageTwo extends Component {
      }, 1000);
    }
  }
- 
+
  _timer (){
    var self = this;
    if(this.state.check){
@@ -392,7 +445,7 @@ class PageTwo extends Component {
      }, 10);
    }
  }
-  
+
   _RenderBonus (){
     if (this.state.TimeTraning > 30){
       return (
@@ -427,7 +480,6 @@ class PageTwo extends Component {
       return pts1;
     } else  return this.state.pts;
   }
-  
   render() {
     return (
       <View style={styles.container}>
@@ -455,7 +507,7 @@ class PageTwo extends Component {
                 </View>
 
               </Image>
-              <TouchableOpacity style={styles.TouchPolygon}>
+              <TouchableOpacity style={styles.TouchPolygon} onPress ={() =>  this._handlePressId(3)}>
                 <Image
                   source ={require('./images/Polygon.png')}
                   style = {styles.imgPolygon}>
