@@ -17,6 +17,8 @@ import {
 
 const { width, height } = Dimensions.get('window')
 
+var List = []
+const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 export default class ActyvityLog extends Component{
 /*  constructor(){
@@ -77,13 +79,93 @@ export default class ActyvityLog extends Component{
 }*/
 constructor(){
   super()
+
   this.state = {
-    progres : 0,
-  }
+      dataSource: ds.cloneWithRows(['rasfd','asdfsadf']),
+      dataSpeed : ds.cloneWithRows(['rasfd','asdfsadf']),
+      list : '',
+      listDist : [],
+      listSpeed : [],
+      dataArr : []
+    }
 }
 
 _handlePressId(Id) {
   this.props.navigator.replace({id: Id,});
+}
+
+_renderRow(data){
+  return(
+    <TouchableOpacity>
+      <View
+        style = {{width : width , height : height /20,flexDirection: 'row'}}>
+        <View style ={{marginLeft : width/10}}>
+          <Text
+            style = {{ fontFamily : 'Roboto-Regular'}}>
+            {data.distance} ml
+          </Text>
+        </View>
+        <View style ={{marginLeft : width/10}}>
+          <Text
+            style = {{fontFamily : 'Roboto-Regular'}}>
+           {data.speed} m/s
+          </Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+      )
+}
+
+_renderListView(){
+      return(
+        <ListView
+          style={styles.scrollView}
+          dataSource= {this.state.dataSource}
+          renderRow={(data) => this._renderRow(data)}
+        />
+      )
+}
+
+_getList(){
+  try {
+    AsyncStorage.getItem('database').then((value) => {
+      if(value == null){
+        this._getList()
+      }else{
+        List = JSON.parse(value)
+        console.log(List)
+        for (var i = 0; i < List.length; i++){
+          if(List[i].distance != null){
+            var arr = {
+              'distance' : parseFloat(List[i].distance).toFixed(2),
+              'speed' : parseFloat(List[i].distance).toFixed(2)
+            }
+            this.state.dataArr.push(arr)
+          }
+          var check = List[i]
+          var dis = check[0]
+          if(dis != null){
+            var arr = {
+              'distance' : parseFloat(dis.distance).toFixed(2),
+              'speed' : parseFloat(dis.speed[0]).toFixed(2)
+            }
+            this.state.dataArr.push(arr)
+          }}
+          this.setState({
+            dataSource : ds.cloneWithRows(this.state.dataArr),
+        })
+        }
+    })
+  }
+  catch(err) {
+    console.log(err)
+  }
+
+}
+
+componentDidMount() {
+  this._getList()
+
 }
 
 render() {
@@ -123,9 +205,7 @@ render() {
         style = {styles.progres}
         progressTintColor = '#674DCD'
         progress = {0.5}/>
-      <ScrollView style = {styles.scrollView}>
-        <Text></Text>
-      </ScrollView>
+      {this._renderListView()}
     </View>
   );
 }
@@ -155,9 +235,10 @@ const styles = StyleSheet.create({
   },
   scrollView:{
     width : width,
+    height : height - height/5,
     position : 'absolute',
     top : height/5,
-    marginTop : 5
+    marginTop : 5,
   },
   imgPol : {
     width : width/6,
