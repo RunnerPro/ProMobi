@@ -222,7 +222,14 @@ class PageTwo extends Component {
 
   componentDidMount() {
   //  console.log("forground")
-    this.doWatch()
+    
+
+    navigator.geolocation.getCurrentPosition(
+        (position) => {},
+        (error) => alert(error.message),
+        {enableHighAccuracy: true, timeout: 1000, maximumAge: 1000, distanceFilter: 10}
+    )
+     this.doWatch() 
     AppState.addEventListener('change', this._handleAppStateChange);
 
   }
@@ -234,13 +241,7 @@ class PageTwo extends Component {
   }
 
   doWatch(){
-    if (!this.state.startTracking){
-      this.state.startTracking = true;
-      navigator.geolocation.getCurrentPosition(
-        (position) => {},
-        (error) => alert(error.message),
-        {enableHighAccuracy: true, timeout: 1000, maximumAge: 1000, distanceFilter: 10}
-      )
+
       this.watchID = navigator.geolocation.watchPosition(
         (position) => {
           const { routeCoordinates, distanceTravelled , speed, coord } = this.state
@@ -269,17 +270,15 @@ class PageTwo extends Component {
         (error) => alert(error.message),
         {enableHighAccuracy: true, timeout: 1000, maximumAge: 0, distanceFilter: 5}
       );
-    }
+
   }
 
   _handleAppStateChange = (nextAppState) => {
-  //   console.log(this.state.stopPress)
     if (nextAppState != 'active' && this.state.stopPress) {
       navigator.geolocation.clearWatch(this.watchID);
       this.watchID = null;
     } else {
-      if (this.watchID !== null) {
-      //  console.log(this.watchID)
+      if (this.watchID === null) {
         this.doWatch();
       }
     }
