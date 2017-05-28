@@ -441,7 +441,7 @@ class PageTwo extends Component {
      });
      setTimeout(function () {
        return (self._timer())
-     }, 10);
+     }, 100);
    }
  }
 
