@@ -18,6 +18,8 @@ import {
 
 const { width, height } = Dimensions.get('window')
 
+var List = []
+const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 export default class ActyvityLog extends Component{
 /*  constructor(){
@@ -81,13 +83,236 @@ export default class ActyvityLog extends Component{
 constructor(){
   super()
   this.state = {
-    progres : 0,
-  }
+      dataSource: ds.cloneWithRows(['rasfd','asdfsadf']),
+      dataSpeed : ds.cloneWithRows(['rasfd','asdfsadf']),
+      list : '',
+      listDist : [],
+      listSpeed : [],
+      dataArr : [],
+      year : '',
+      month : ''
+      }
+    this._renderDitails = this._renderDitails.bind(this);
 }
 
 
 _handlePressId(Id) {
   this.props.navigator.replace({id: Id,});
+}
+
+_renderDitails(rowData, rowID){
+      AsyncStorage.setItem('Ditails', JSON.stringify(rowData))
+  //    this._handlePressId(8)
+}
+
+_renderPts(data){
+  if (data == null){
+    return 0
+  }else{
+    return data
+  }
+}
+
+_renderTime(data){
+  if (data == null){
+    return 0
+  }else{
+    return data
+  }
+}
+
+_renderDate(year,mounth){
+  if(this.state.month != mounth){
+    this.state.month = mounth
+    this.state.year = year
+    if (mounth == '01'){
+      return (
+        <Text style = {styles.padding}>January,{year}</Text>
+      )
+    }
+    if (mounth == '02'){
+      return (
+        <Text style = {styles.padding}>February,{year}</Text>
+      )
+    }
+    if (mounth == '03'){
+      return (
+        <Text style = {styles.padding}>March,{year}</Text>
+      )
+    }
+    if (mounth == '04'){
+      return (
+        <Text style = {styles.padding}>April,{year}</Text>
+      )
+    }
+    if (mounth == '05'){
+      return (
+        <Text style = {styles.padding}>May,{year}</Text>
+      )
+    }
+    if (mounth == '06'){
+      return (
+        <Text style = {styles.padding}>June,{year}</Text>
+      )
+    }
+    if (mounth == '07'){
+      return (
+        <Text style = {styles.padding}>July,{year}</Text>
+      )
+    }
+    if (mounth == '08'){
+      return (
+        <Text style = {styles.padding}>August,{year}</Text>
+      )
+    }
+    if (mounth == '09'){
+      return (
+        <Text style = {styles.padding}>September,{year}</Text>
+      )
+    }
+    if (mounth == '10'){
+      return (
+        <Text style = {styles.padding}>October,{year}</Text>
+      )
+    }
+    if (mounth == '11'){
+      return (
+        <Text style = {styles.padding}>November,{year}</Text>
+      )
+    }
+    if (mounth == '12'){
+      return (
+        <Text style = {styles.padding}>December,{year}</Text>
+      )
+    }
+  }
+  if(this.state.year != year){
+    this.state.year = year
+    return (
+      <Text style = {styles.padding}>{mounth},{year}</Text>
+    )
+  }
+  return
+}
+
+_renderRow(rowData: string, sectionID: number, rowID: number,self){
+  var year = ''
+  var mounth = ''
+  var day = ''
+  if (rowData.data != null){
+    var arr = rowData.data.split('"')
+    arr = arr[1].split('-')
+    year = arr[0]
+    mounth = arr[1]
+  }
+  return(
+    <TouchableOpacity onPress = {() => self._renderDitails(rowData)}>
+      {this._renderDate(year,mounth)}
+      <View
+        style = {{width : width , height : height /20,flexDirection: 'row'}}>
+        <View style ={styles.forView}>
+          <Text style = {styles.textData}>
+            {this._renderPts(rowData.pts)}
+          </Text>
+          <Text style = {styles.textPrefix}>
+            PTS
+          </Text>
+        </View>
+        <View style ={styles.forView}>
+          <Text style = {styles.textData}>
+            {rowData.distance}
+          </Text>
+          <Text style = {styles.textPrefix}>
+            mi
+          </Text>
+        </View>
+        <View style = {styles.forView}>
+          <Text style = {styles.textData}>
+            {this._renderTime(rowData.time)}
+          </Text>
+          <Text style = {styles.textPrefix}>
+            SEC
+          </Text>
+        </View>
+        <View style = {styles.forView}>
+          <Text style = {styles.textData}>
+           {rowData.speed}
+          </Text>
+          <Text style = {styles.textPrefix}>
+            min/mil
+          </Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+      )
+}
+
+_renderListView(){
+  var self = this
+      return(
+        <ListView
+          style={styles.scrollView}
+          dataSource= {this.state.dataSource}
+          renderRow={(data, sectionID,rowID) => this._renderRow(data ,sectionID,rowID , self)}
+        />
+      )
+}
+
+_getList(){
+  try {
+    AsyncStorage.getItem('database').then((value) => {
+      if(value == null){
+        this._getList()
+      }else{
+        List = JSON.parse(value)
+        for (var i = 0; i < List.length; i++){
+          if(List[i].distance != null){
+            var arr = {
+              'distance' : parseFloat(List[i].distance).toFixed(2),
+              'speed' : parseFloat(List[i].distance).toFixed(2),
+              'coord' : List[i].coordinates,
+              'time' : List[i].time,
+              'pts' : List[i].pts,
+              'data' : List[i].data
+            }
+            this.state.dataArr.push(arr)
+          }
+          var check = List[i]
+          var dis = check[0]
+          if(dis != null){
+            var arr = {
+              'distance' : parseFloat(dis.distance).toFixed(2),
+              'speed' : parseFloat(dis.speed[0]).toFixed(2),
+              'coord' : dis.coordinates,
+              'time' : dis.time,
+              'pts' : dis.pts,
+              'data' : dis.data
+            }
+            this.state.dataArr.push(arr)
+          }}
+          var temp
+          for(var i = 0 , j = this.state.dataArr.length-1; i<j; i++,j--)
+          {
+              temp = this.state.dataArr[j]
+              this.state.dataArr[j] = this.state.dataArr[i]
+              this.state.dataArr[i] = temp
+          }
+          this.setState({
+            dataSource : ds.cloneWithRows(this.state.dataArr),
+        })
+        }
+    })
+  }
+  catch(err) {
+    console.log(err)
+  }
+
+}
+
+componentDidMount() {
+  AsyncStorage.removeItem('Ditails');
+  this._getList()
+
 }
 
 render() {
@@ -127,15 +352,32 @@ render() {
         style = {styles.progres}
         progressTintColor = '#674DCD'
         progress = {0.5}/>
-      <ScrollView style = {styles.scrollView}>
-        <Text></Text>
-      </ScrollView>
+      {this._renderListView()}
     </View>
   );
 }
 }
 
 const styles = StyleSheet.create({
+  padding : {
+    marginLeft : width/20
+  },
+  forView : {
+    width :width/6,
+    alignItems : 'center',
+    marginLeft : width/20,
+    flexDirection : 'row'
+  },
+  textPrefix : {
+    fontFamily : 'Roboto-Regular',
+    fontSize : 10,
+    color : '#979797',
+    paddingTop : height*0.007
+  },
+  textData : {
+    fontFamily : 'Roboto-Regular',
+    fontSize : 14
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -161,7 +403,8 @@ const styles = StyleSheet.create({
     width : width,
     position : 'absolute',
     top : height/5,
-    marginTop : 5
+    marginTop : 5,
+    height : height - height/5
   },
   imgPol : {
     width : width/6,
