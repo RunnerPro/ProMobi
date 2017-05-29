@@ -22,6 +22,7 @@ import SingUp from './SingUpScreen'
 import RegistrScreen from './RegistrScreen'
 import TestBK from './TestBK'
 import Policy  from './Policy'
+import Ditails from './Ditails'
 
 var SCREEN_WIDTH = require('Dimensions').get('window').width;
 var BaseConfig = Navigator.SceneConfigs.FloatFromRight;
@@ -56,6 +57,9 @@ class ReactNativeNavigationExample extends Component {
     }
     if (route.id == 7){
       return <Policy navigator = {navigator}/>
+    }
+    if (route.id == 8){
+      return <Ditails navigator = {navigator}/>
     }
   }
   render() {

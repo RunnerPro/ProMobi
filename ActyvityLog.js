@@ -87,28 +87,34 @@ constructor(){
       listDist : [],
       listSpeed : [],
       dataArr : []
-    }
+      }
+    this._renderDitails = this._renderDitails.bind(this);
 }
 
 _handlePressId(Id) {
   this.props.navigator.replace({id: Id,});
 }
 
-_renderRow(data){
+_renderDitails(rowData, rowID){
+      AsyncStorage.setItem('Ditails', JSON.stringify(rowData))
+  //    this._handlePressId(8)
+}
+
+_renderRow(rowData: string, sectionID: number, rowID: number,self){
   return(
-    <TouchableOpacity>
+    <TouchableOpacity onPress = {() => self._renderDitails(rowData)}>
       <View
         style = {{width : width , height : height /20,flexDirection: 'row'}}>
         <View style ={{marginLeft : width/10}}>
           <Text
             style = {{ fontFamily : 'Roboto-Regular'}}>
-            {data.distance} ml
+            {rowData.distance} ml
           </Text>
         </View>
         <View style ={{marginLeft : width/10}}>
           <Text
             style = {{fontFamily : 'Roboto-Regular'}}>
-           {data.speed} m/s
+           {rowData.speed} m/s
           </Text>
         </View>
       </View>
@@ -117,11 +123,12 @@ _renderRow(data){
 }
 
 _renderListView(){
+  var self = this
       return(
         <ListView
           style={styles.scrollView}
           dataSource= {this.state.dataSource}
-          renderRow={(data) => this._renderRow(data)}
+          renderRow={(data, sectionID,rowID) => this._renderRow(data ,sectionID,rowID , self)}
         />
       )
 }
@@ -133,12 +140,12 @@ _getList(){
         this._getList()
       }else{
         List = JSON.parse(value)
-        console.log(List)
         for (var i = 0; i < List.length; i++){
           if(List[i].distance != null){
             var arr = {
               'distance' : parseFloat(List[i].distance).toFixed(2),
-              'speed' : parseFloat(List[i].distance).toFixed(2)
+              'speed' : parseFloat(List[i].distance).toFixed(2),
+              'coord' : List[i].coordinates
             }
             this.state.dataArr.push(arr)
           }
@@ -147,7 +154,8 @@ _getList(){
           if(dis != null){
             var arr = {
               'distance' : parseFloat(dis.distance).toFixed(2),
-              'speed' : parseFloat(dis.speed[0]).toFixed(2)
+              'speed' : parseFloat(dis.speed[0]).toFixed(2),
+              'coord' : dis.coordinates
             }
             this.state.dataArr.push(arr)
           }}
@@ -164,6 +172,7 @@ _getList(){
 }
 
 componentDidMount() {
+  AsyncStorage.removeItem('Ditails');
   this._getList()
 
 }
