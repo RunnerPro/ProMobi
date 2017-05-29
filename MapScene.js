@@ -85,6 +85,21 @@ class PageTwo extends Component {
     this._timer = this._timer.bind(this);
     this._timeTraning = this._timeTraning.bind(this);
   }
+
+  _getToken(){
+    AsyncStorage.getItem('databaseTOKEN').then((value)=>{
+      if (value == null){
+        this._getToken()
+      }else {
+         var token = JSON.parse(value)
+          token = token._65.token
+          this.setState({
+            Token : token
+          })
+        }
+        })
+  }
+
   _onChangePlay(){
     if(this.state.playPress){
       this.setState({
@@ -112,36 +127,26 @@ class PageTwo extends Component {
   }
 
   async onPress(arrayDataAndTime, arrayDistance) {
-
     AsyncStorage.getItem('database').then((value) => {
       console.log(JSON.parse(value))
     })
-    //console.log(arrayDataAndTime)
-    //console.log(JSON.stringify(arrayDistance))
-    AsyncStorage.getItem('databaseTOKEN').then((value)=>{
-        token = JSON.parse(value)
-        token = token._65.token
-      //  console.log(token)
-      })
     try {
       let response = await fetch("https://runner-pro.herokuapp.com/api/new_record", {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'Authorization' : 'eyJpYXQiOjE0OTU0NzcxODYsImV4cCI6MTQ5NTQ4MzE4NiwiYWxnIjoiSFMyNTYifQ.eyJpZCI6Mn0.AUrydj4SaJgr3AhyLDxZWBhJzBhSLXImLRBoipNUtOQ',
+          'Authorization' : `${this.state.Token}`,
         },
         body:JSON.stringify ({
-            //time: arrayDataAndTime,
+            time: arrayDataAndTime,
             coordinates : arrayDistance,
         })
       });
       console.log(response)
       let res = response.text()
       console.log(res)
-                  //      let data = await response.Body.json();
-                    //    let parseTest = JSON.parse(date);
-                    //  console.log(parseTest)
+
     } catch(errors) {
       console.log(errors)
     }
@@ -181,6 +186,9 @@ class PageTwo extends Component {
       coordinates: this.state.coord,
       speed: speedlist,
       distance: this.state.distanceTravelled,
+      data : JSON.stringify(new Date),
+      time : this.state.TimeTraning,
+      pts : this.state.pts
     }
     this.state.startTracking = false;
     arrayDataAndTime.push(data);
@@ -221,19 +229,16 @@ class PageTwo extends Component {
   }
 
   componentDidMount() {
-  //  console.log("forground")
-    
-
     navigator.geolocation.getCurrentPosition(
         (position) => {},
         (error) => alert(error.message),
         {enableHighAccuracy: true, timeout: 1000, maximumAge: 1000, distanceFilter: 10}
     )
-     this.doWatch() 
+     this.doWatch()
+     this._getToken()
     AppState.addEventListener('change', this._handleAppStateChange);
-
   }
-  
+
   componentWillUnmount() {
   //  console.log("backgroundColor")
     AppState.removeEventListener('change', this._handleAppStateChange);
@@ -241,7 +246,6 @@ class PageTwo extends Component {
   }
 
   doWatch(){
-
       this.watchID = navigator.geolocation.watchPosition(
         (position) => {
           const { routeCoordinates, distanceTravelled , speed, coord } = this.state
@@ -301,7 +305,7 @@ class PageTwo extends Component {
       actyv : true,
     })
   }
-  
+
   _onSelectACTYVITYLOG(){
     this._handlePressId(3);
     this.setState({PressBurger : false});
@@ -459,7 +463,7 @@ class PageTwo extends Component {
       );
     }
   }
-  
+
   _pts() {
     var pts = parseFloat(this.state.distanceTravelled*10).toFixed(0);
     var pts1 = 0;
