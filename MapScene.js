@@ -179,14 +179,23 @@ class PageTwo extends Component {
     const arrayDistance=[];
     const data = {
       type: this.state.TypeOF,
-      time: JSON.stringify(new Date),
+      time: new Date,
     }
+
+    var date = new Date
+    var day = date.getDay()
+    var Data = date.getDate()
+    var mounth = date.getMonth()
+    var year = date.getFullYear()
 
     const dis = {
       coordinates: this.state.coord,
       speed: speedlist,
       distance: this.state.distanceTravelled,
-      data : JSON.stringify(new Date),
+      day : day,
+      data : Data,
+      month : mounth,
+      year : year,
       time : this.state.TimeTraning,
       pts : this.state.pts
     }

@@ -90,7 +90,8 @@ constructor(){
       listSpeed : [],
       dataArr : [],
       year : '',
-      month : ''
+      month : '',
+      supprot : ''
       }
     this._renderDitails = this._renderDitails.bind(this);
 }
@@ -122,128 +123,148 @@ _renderTime(data){
 }
 
 _renderDate(year,mounth){
-  if(this.state.month != mounth){
-    this.state.month = mounth
-    this.state.year = year
-    if (mounth == '01'){
-      return (
-        <Text style = {styles.padding}>January,{year}</Text>
+    switch(mounth){
+      case 0 :
+        monthName = "January";
+        break;
+      case 1 :
+        monthName = "February";
+        break;
+      case 2 :
+        monthName = "March";
+        break;
+      case 3 :
+        monthName = "April";
+        break;
+      case 4 :
+        monthName = "May";
+        break;
+      case 5 :
+        monthName = "June";
+        break;
+      case 6 :
+        monthName = "July";
+        break;
+      case 7 :
+        monthName = "August";
+        break;
+      case 8 :
+        monthName = "September";
+        break;
+      case 9 :
+        monthName = "October";
+        break;
+      case 10 :
+        monthName = "November";
+        break;
+      case 11 :
+        monthName = "December";
+        break;
+      default:
+        monthName = "other"
+    }
+    this.state.mounth = monthName
+    if (this.state.mounth != "other" && this.state.mounth != this.state.supprot){
+      this.state.supprot = this.state.mounth
+        return (
+          <Text style = {styles.padding}>{monthName},{year}</Text>
       )
     }
-    if (mounth == '02'){
-      return (
-        <Text style = {styles.padding}>February,{year}</Text>
-      )
-    }
-    if (mounth == '03'){
-      return (
-        <Text style = {styles.padding}>March,{year}</Text>
-      )
-    }
-    if (mounth == '04'){
-      return (
-        <Text style = {styles.padding}>April,{year}</Text>
-      )
-    }
-    if (mounth == '05'){
-      return (
-        <Text style = {styles.padding}>May,{year}</Text>
-      )
-    }
-    if (mounth == '06'){
-      return (
-        <Text style = {styles.padding}>June,{year}</Text>
-      )
-    }
-    if (mounth == '07'){
-      return (
-        <Text style = {styles.padding}>July,{year}</Text>
-      )
-    }
-    if (mounth == '08'){
-      return (
-        <Text style = {styles.padding}>August,{year}</Text>
-      )
-    }
-    if (mounth == '09'){
-      return (
-        <Text style = {styles.padding}>September,{year}</Text>
-      )
-    }
-    if (mounth == '10'){
-      return (
-        <Text style = {styles.padding}>October,{year}</Text>
-      )
-    }
-    if (mounth == '11'){
-      return (
-        <Text style = {styles.padding}>November,{year}</Text>
-      )
-    }
-    if (mounth == '12'){
-      return (
-        <Text style = {styles.padding}>December,{year}</Text>
-      )
-    }
+}
+
+_renderDay(day,date){
+  todayDate = new Date
+  todayDay = todayDate.getDate()
+  todayDayOfWeek = todayDate.getDay()
+    switch (day){
+      case 0:
+        nameDay = "Sunday";
+        break;
+      case 1:
+        nameDay = "Monday"
+        break;
+      case 2 :
+        nameDay = "Tuesday";
+        break;
+      case 3 :
+        nameDay = "Wednesday";
+        break;
+      case 4 :
+        nameDay = "Thursday";
+        break;
+      case 5 :
+        nameDay = "Friday";
+        breakl
+      case 6 :
+        nameDay = "Saturday";
+      default:
+        nameDay = "other"
   }
-  if(this.state.year != year){
-    this.state.year = year
-    return (
-      <Text style = {styles.padding}>{mounth},{year}</Text>
+  if (todayDayOfWeek == day && todayDay == date){
+    return(
+      <Text style = {styles.padding}>Today</Text>
+    )
+  }else{
+    return(
+      <Text style = {styles.headerOfList}>{nameDay},{date}</Text>
     )
   }
-  return
+
 }
 
 _renderRow(rowData: string, sectionID: number, rowID: number,self){
   var year = ''
-  var mounth = ''
+  var month = ''
   var day = ''
-  if (rowData.data != null){
-    var arr = rowData.data.split('"')
-    arr = arr[1].split('-')
-    year = arr[0]
-    mounth = arr[1]
+  var date = ''
+  if (rowData.year != null && rowData.month != null){
+    year = rowData.year
+    month = rowData.month
+    day = rowData.day
+    date = rowData.data
   }
   return(
-    <TouchableOpacity onPress = {() => self._renderDitails(rowData)}>
-      {this._renderDate(year,mounth)}
-      <View
-        style = {{width : width , height : height /20,flexDirection: 'row'}}>
-        <View style ={styles.forView}>
-          <Text style = {styles.textData}>
-            {this._renderPts(rowData.pts)}
-          </Text>
-          <Text style = {styles.textPrefix}>
-            PTS
-          </Text>
+    <View>
+      {this._renderDate(year,month)}
+      <TouchableOpacity onPress = {() => self._renderDitails(rowData)}>
+        {this._renderDay(day, date)}
+        <View
+          style = {{width : width , height : height /20,flexDirection: 'row'}}>
+          <View style ={styles.forView}>
+            <Text style = {styles.textData}>
+              {this._renderPts(rowData.pts)}
+            </Text>
+            <Text style = {styles.textPrefix}>
+              PTS
+            </Text>
+          </View>
+          <View style ={styles.forView}>
+            <Text style = {styles.textData}>
+              {rowData.distance}
+            </Text>
+            <Text style = {styles.textPrefix}>
+              mi
+            </Text>
+          </View>
+          <View style = {styles.forView}>
+            <Text style = {styles.textData}>
+              {this._renderTime(rowData.time)}
+            </Text>
+            <Text style = {styles.textPrefix}>
+              SEC
+            </Text>
+          </View>
+          <View style = {styles.forView}>
+            <Text style = {styles.textData}>
+             {rowData.speed}
+            </Text>
+            <Text style = {styles.textPrefix}>
+              min/mil
+            </Text>
+          </View>
         </View>
-        <View style ={styles.forView}>
-          <Text style = {styles.textData}>
-            {rowData.distance}
-          </Text>
-          <Text style = {styles.textPrefix}>
-            mi
-          </Text>
-        </View>
-        <View style = {styles.forView}>
-          <Text style = {styles.textData}>
-            {this._renderTime(rowData.time)}
-          </Text>
-          <Text style = {styles.textPrefix}>
-            SEC
-          </Text>
-        </View>
-        <View style = {styles.forView}>
-          <Text style = {styles.textData}>
-           {rowData.speed}
-          </Text>
-          <Text style = {styles.textPrefix}>
-            min/mil
-          </Text>
-        </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </View>
       )
 }
 
@@ -273,6 +294,9 @@ _getList(){
               'coord' : List[i].coordinates,
               'time' : List[i].time,
               'pts' : List[i].pts,
+              'day' : List[i].day,
+              'month' : List[i].month,
+              'year' : List[i].year,
               'data' : List[i].data
             }
             this.state.dataArr.push(arr)
@@ -286,6 +310,9 @@ _getList(){
               'coord' : dis.coordinates,
               'time' : dis.time,
               'pts' : dis.pts,
+              'day' : dis.day,
+              'month' : dis.month,
+              'year' : dis.year,
               'data' : dis.data
             }
             this.state.dataArr.push(arr)
@@ -359,8 +386,17 @@ render() {
 }
 
 const styles = StyleSheet.create({
+  headerOfList : {
+    marginLeft : width/20,
+    color : '#979797',
+    fontFamily : 'Roboto-Regular',
+    marginTop : height*0.01,
+    fontSize : 10
+  },
   padding : {
-    marginLeft : width/20
+    marginLeft : width/20,
+    color : '#979797',
+    fontFamily : 'Roboto-Regular'
   },
   forView : {
     width :width/6,
