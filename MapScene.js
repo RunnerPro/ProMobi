@@ -79,11 +79,15 @@ class PageTwo extends Component {
       i : 0,
       pts : 0,
       startTracking : false,
-      startCheck : false
-
+      startCheck : false,
+      startTimer : 0,
+      JoggingTime : 0,
+      k : 1
     }
     this._timer = this._timer.bind(this);
     this._timeTraning = this._timeTraning.bind(this);
+    this._stopAll = this._stopAll.bind(this);
+
   }
 
   _getToken(){
@@ -121,8 +125,10 @@ class PageTwo extends Component {
 
     if (!this.state.check ){
       this.state.check = true;
-      this._timer();
-      this._timeTraning();
+      this.state.startTimer = new Date
+      this.state.startTimer = this.state.startTimer.getTime()
+      this._timer(this.state.startTimer);
+      this._timeTraning(this.state.startTimer);
     }
   }
 
@@ -163,6 +169,7 @@ class PageTwo extends Component {
       Sec2 : 0,
       min2 : 0,
       startCheck : false ,
+      JoggingTime : 0
     })
     this.setState({
       stopPress : true,
@@ -410,52 +417,35 @@ class PageTwo extends Component {
     }
   }
 
-  _timeTraning () {
-   var self =this;
-   if ( this.state.check){
-     this.setState ({
-       TimeTraning : this.state.TimeTraning + 1
-     })
-     setTimeout(function () {
-       return (self._timeTraning())
-     }, 1000);
-   }
- }
+  _timeTraning (timer) {
+    Timer = timer
+    var self =this;
+    if ( this.state.check){
+       var IntermediateTime = new Date
+       JoggingTime = IntermediateTime.getTime() - timer
+       this.setState ({
+         TimeTraning :  Math.trunc(JoggingTime/1000)
+       })
+       setTimeout(function () {
+         return (self._timeTraning(Timer))
+       }, 1000);
+     }
+  }
 
- _timer (){
+ _timer (timer){
+   Timer = timer
    var self = this;
    if(this.state.check){
-     if (this.state.Milsec2 > 8){
+     var IntermediateTime = new Date
+     JoggingTime = IntermediateTime.getTime() - timer
        this.setState({
-         Milsec2 : -1 ,
-         Sec : this.state.Sec + 1
+         sec : Math.trunc(JoggingTime/1000),
+         min : Math.trunc(JoggingTime/60000),
        })
      }
-     if (this.state.Sec > 9){
-       this.setState({
-         Sec : 0 ,
-         Sec2 : this.state.Sec2 + 1
-       })
-     }
-     if (this.state.Sec2 > 5){
-       this.setState({
-         Sec2 : 0 ,
-         min : this.state.min + 1
-       })
-     }
-     if (this.state.Sec2 > 9){
-       this.setState({
-         min : 0 ,
-         min2 : this.state.min + 1
-       })
-     }
-     this.setState({
-       Milsec2 : this.state.Milsec2 + 1
-     });
      setTimeout(function () {
-       return (self._timer())
+       return (self._timer(Timer))
      }, 100);
-   }
  }
 
   _RenderBonus (){
@@ -548,7 +538,7 @@ class PageTwo extends Component {
                 style = {{width: width,
                           height : height*2/8,
                           top : height }}>
-                  <Text style = {styles.TextTime}>{this.state.min2}{this.state.min}:{this.state.Sec2}{this.state.Sec}.{this.state.Milsec2}</Text>
+                  <Text style = {styles.TextTime}>{this.state.min}:{this.state.sec}</Text>
                   <TouchableOpacity style = {styles.touchPlay} onPress={() => this._onChangePlay()}>
                     {this._onPressPlayButton()}
                   </TouchableOpacity>
