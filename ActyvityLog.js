@@ -59,14 +59,33 @@ _renderPts(data){
 }
 
 _renderTime(data){
-  if (data == null){
-    return 0
-  }else{
-    return data
+  if(data != null){
+    if (data.sec <= 9 && data.min <= 9){
+      return(
+        <Text style = {stylesActyvityLog.textData}>0{data.min}:0{data.sec}</Text>
+      )
+    }
+    if(data.sec <= 9 && data.min > 9){
+      return(
+        <Text style = {stylesActyvityLog.textData}>{data.min}:0{data.sec}</Text>
+      )
+    }
+    if(data.sec > 9 && data.min <= 9){
+      return(
+        <Text style = {stylesActyvityLog.textData}>0{data.min}:{data.sec}</Text>
+      )
+    }
+    if(data.sec > 9 && data.min > 9){
+      return(
+        <Text style = {stylesActyvityLog.textData}>{data.min}:{data.sec}</Text>
+      )
+    }
   }
 }
 
 _renderDate(year,mounth){
+  todayDate = new Date
+  currentMonth = todayDate.getMonth()
     switch(mounth){
       case 0 :
         monthName = "January";
@@ -108,16 +127,22 @@ _renderDate(year,mounth){
         monthName = "other"
     }
     this.state.mounth = monthName
+    if (currentMonth == mounth && this.state.mounth != "other" && this.state.mounth != this.state.supprot){
+      this.state.supprot = this.state.mounth
+      return(
+        <Text style = {stylesActyvityLog.padding}>THIS MONTH</Text>
+      )
+    }else {
     if (this.state.mounth != "other" && this.state.mounth != this.state.supprot){
       this.state.supprot = this.state.mounth
         return (
           <Text style = {stylesActyvityLog.padding}>{monthName},{year}</Text>
       )
     }
+  }
 }
 
 _renderDay(day,date){
-  console.log(day)
   todayDate = new Date
   todayDay = todayDate.getDate()
   todayDayOfWeek = todayDate.getDay()
@@ -192,12 +217,7 @@ _renderRow(rowData: string, sectionID: number, rowID: number,self){
             </Text>
           </View>
           <View style = {stylesActyvityLog.forView}>
-            <Text style = {stylesActyvityLog.textData}>
-              {this._renderTime(rowData.time)}
-            </Text>
-            <Text style = {stylesActyvityLog.textPrefix}>
-              SEC
-            </Text>
+            {this._renderTime(rowData.time)}
           </View>
           <View style = {stylesActyvityLog.forView}>
             <Text style = {stylesActyvityLog.textData}>

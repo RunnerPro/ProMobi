@@ -70,7 +70,7 @@ class PageTwo extends Component {
       coord : [],
       Milsec : 0,
       Milsec2 : 0,
-      Sec : 0,
+      sec : 0,
       Sec2 : 0,
       min2 : 0,
       min : 0,
@@ -163,7 +163,7 @@ class PageTwo extends Component {
       TimeTraning : 0,
       check : false,
       Milsec : 0,
-      Sec : 0,
+      sec : 0,
       min : 0,
       Milsec2 : 0,
       Sec2 : 0,
@@ -256,7 +256,6 @@ class PageTwo extends Component {
   }
 
   componentWillUnmount() {
-  //  console.log("backgroundColor")
     AppState.removeEventListener('change', this._handleAppStateChange);
     navigator.geolocation.clearWatch(this.watchID);
   }
@@ -422,9 +421,12 @@ class PageTwo extends Component {
     var self =this;
     if ( this.state.check){
        var IntermediateTime = new Date
-       JoggingTime = IntermediateTime.getTime() - timer
+       var JoggingTime = new Date(IntermediateTime.getTime() - timer)
        this.setState ({
-         TimeTraning :  Math.trunc(JoggingTime/1000)
+         TimeTraning : {
+          'sec' : JoggingTime.getUTCSeconds(),
+          'min' : JoggingTime.getUTCMinutes()
+         }
        })
        setTimeout(function () {
          return (self._timeTraning(Timer))
@@ -437,10 +439,10 @@ class PageTwo extends Component {
    var self = this;
    if(this.state.check){
      var IntermediateTime = new Date
-     JoggingTime = IntermediateTime.getTime() - timer
+     var JoggingTime = new Date(IntermediateTime.getTime() - timer)
        this.setState({
-         sec : Math.trunc(JoggingTime/1000),
-         min : Math.trunc(JoggingTime/60000),
+         sec : JoggingTime.getUTCSeconds(),
+         min : JoggingTime.getUTCMinutes()
        })
      }
      setTimeout(function () {
@@ -460,6 +462,29 @@ class PageTwo extends Component {
           </View>
         </Image>
       );
+    }
+  }
+
+  _renderTime(){
+    if (this.state.sec <= 9 && this.state.min <= 9){
+      return(
+        <Text style = {styles.TextTime}>0{this.state.min}:0{this.state.sec}</Text>
+      )
+    }
+    if(this.state.sec <= 9 && this.state.min > 9){
+      return(
+        <Text style = {styles.TextTime}>{this.state.min}:0{this.state.sec}</Text>
+      )
+    }
+    if(this.state.sec > 9 && this.state.min <= 9){
+      return(
+        <Text style = {styles.TextTime}>0{this.state.min}:{this.state.sec}</Text>
+      )
+    }
+    if(this.state.sec > 9 && this.state.min > 9){
+      return(
+        <Text style = {styles.TextTime}>{this.state.min}:{this.state.sec}</Text>
+      )
     }
   }
 
@@ -538,7 +563,7 @@ class PageTwo extends Component {
                 style = {{width: width,
                           height : height*2/8,
                           top : height }}>
-                  <Text style = {styles.TextTime}>{this.state.min}:{this.state.sec}</Text>
+                  {this._renderTime()}
                   <TouchableOpacity style = {styles.touchPlay} onPress={() => this._onChangePlay()}>
                     {this._onPressPlayButton()}
                   </TouchableOpacity>
