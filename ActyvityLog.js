@@ -22,6 +22,8 @@ import stylesActyvityLog from './ActyvityLogSyles'
 
 var List = []
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+let Day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Friday", "Saturday"]
 
 export default class ActyvityLog extends Component{
 constructor(){
@@ -60,72 +62,18 @@ _renderPts(data){
 
 _renderTime(data){
   if(data != null){
-    if (data.sec <= 9 && data.min <= 9){
-      return(
-        <Text style = {stylesActyvityLog.textData}>0{data.min}:0{data.sec}</Text>
-      )
-    }
-    if(data.sec <= 9 && data.min > 9){
-      return(
-        <Text style = {stylesActyvityLog.textData}>{data.min}:0{data.sec}</Text>
-      )
-    }
-    if(data.sec > 9 && data.min <= 9){
-      return(
-        <Text style = {stylesActyvityLog.textData}>0{data.min}:{data.sec}</Text>
-      )
-    }
-    if(data.sec > 9 && data.min > 9){
-      return(
-        <Text style = {stylesActyvityLog.textData}>{data.min}:{data.sec}</Text>
-      )
-    }
+    var formattedNumber = ("0" +data.min).slice(-2)
+    var formatSec = ("0" +data.sec).slice(-2)
+    return (
+      <Text style = {stylesActyvityLog.textData}>{formattedNumber}:{formatSec}</Text>
+    )
   }
 }
 
 _renderDate(year,mounth){
   todayDate = new Date
   currentMonth = todayDate.getMonth()
-    switch(mounth){
-      case 0 :
-        monthName = "January";
-        break;
-      case 1 :
-        monthName = "February";
-        break;
-      case 2 :
-        monthName = "March";
-        break;
-      case 3 :
-        monthName = "April";
-        break;
-      case 4 :
-        monthName = "May";
-        break;
-      case 5 :
-        monthName = "June";
-        break;
-      case 6 :
-        monthName = "July";
-        break;
-      case 7 :
-        monthName = "August";
-        break;
-      case 8 :
-        monthName = "September";
-        break;
-      case 9 :
-        monthName = "October";
-        break;
-      case 10 :
-        monthName = "November";
-        break;
-      case 11 :
-        monthName = "December";
-        break;
-      default:
-        monthName = "other"
-    }
+    let monthName =  months[mounth];
     this.state.mounth = monthName
     if (currentMonth == mounth && this.state.mounth != "other" && this.state.mounth != this.state.supprot){
       this.state.supprot = this.state.mounth
@@ -146,30 +94,7 @@ _renderDay(day,date){
   todayDate = new Date
   todayDay = todayDate.getDate()
   todayDayOfWeek = todayDate.getDay()
-    switch (day){
-      case 0:
-        nameDay = "Sunday";
-        break;
-      case 1:
-        nameDay = "Monday"
-        break;
-      case 2 :
-        nameDay = "Tuesday";
-        break;
-      case 3 :
-        nameDay = "Wednesday";
-        break;
-      case 4 :
-        nameDay = "Thursday";
-        break;
-      case 5 :
-        nameDay = "Friday";
-        breakl
-      case 6 :
-        nameDay = "Saturday";
-      default:
-        nameDay = "other"
-  }
+  let nameDay = Day[day]
   if (todayDayOfWeek == day && todayDay == date){
     return(
       <Text style = {stylesActyvityLog.headerOfList}>Today</Text>
