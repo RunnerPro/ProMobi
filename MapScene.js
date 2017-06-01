@@ -46,7 +46,6 @@ var CustomSceneConfig = Object.assign({}, BaseConfig, {
 });
 const speedlist=[];
 var token = [];
-var tk = ""
 
 class PageTwo extends Component {
   constructor(props) {
@@ -82,7 +81,10 @@ class PageTwo extends Component {
       startCheck : false,
       startTimer : 0,
       JoggingTime : 0,
-      k : 1
+      k : 1,
+      puseTimer : false,
+      auxiliaryDate : 0,
+      delta : 0
     }
     this._timer = this._timer.bind(this);
     this._timeTraning = this._timeTraning.bind(this);
@@ -109,6 +111,12 @@ class PageTwo extends Component {
       this.setState({
         prevLatLng : {},
       })
+      this.state.auxiliaryDate = new Date
+    }
+    if (!this.state.playPress && this.state.auxiliaryDate != 0){
+      timeOnStart = new Date
+      console.log( timeOnStart.getTime() - this.state.auxiliaryDate.getTime() + this.state.delta)
+      this.state.delta = timeOnStart.getTime() - this.state.auxiliaryDate.getTime() + this.state.delta
     }
     if(this.state.pressStop == 1 ){
       this.setState({
@@ -122,9 +130,14 @@ class PageTwo extends Component {
       pressStop : 0,
       startCheck : !this.state.startCheck,
     })
-
+    if (this.state.startTimer != 0){
+      this.state.puseTimer = !this.state.puseTimer
+      this._timer(this.state.startTimer);
+      this._timeTraning(this.state.startTimer);
+    }
     if (!this.state.check ){
       this.state.check = true;
+      this.state.puseTimer = true
       this.state.startTimer = new Date
       this.state.startTimer = this.state.startTimer.getTime()
       this._timer(this.state.startTimer);
@@ -169,7 +182,9 @@ class PageTwo extends Component {
       Sec2 : 0,
       min2 : 0,
       startCheck : false ,
-      JoggingTime : 0
+      JoggingTime : 0,
+      delta : 0,
+      auxiliaryDate : 0
     })
     this.setState({
       stopPress : true,
@@ -416,12 +431,12 @@ class PageTwo extends Component {
     }
   }
 
-  _timeTraning (timer) {
+  _timeTraning(timer) {
     Timer = timer
     var self =this;
-    if ( this.state.check){
+    if (this.state.check && this.state.puseTimer){
        var IntermediateTime = new Date
-       var JoggingTime = new Date(IntermediateTime.getTime() - timer)
+       var JoggingTime = new Date(IntermediateTime.getTime() - timer - this.state.delta)
        this.setState ({
          TimeTraning : {
           'sec' : JoggingTime.getUTCSeconds(),
@@ -437,21 +452,21 @@ class PageTwo extends Component {
  _timer (timer){
    Timer = timer
    var self = this;
-   if(this.state.check){
+   if(this.state.check && this.state.puseTimer){
      var IntermediateTime = new Date
-     var JoggingTime = new Date(IntermediateTime.getTime() - timer)
+     var JoggingTime = new Date(IntermediateTime.getTime() - timer - this.state.delta)
        this.setState({
          sec : JoggingTime.getUTCSeconds(),
          min : JoggingTime.getUTCMinutes()
        })
-     }
      setTimeout(function () {
        return (self._timer(Timer))
-     }, 100);
+     }, 1000);
+   }
  }
 
   _RenderBonus (){
-    if (this.state.TimeTraning > 30){
+    if (this.state.TimeTraning.sec + this.state.TimeTraning.min*60 > 30){
       return (
         <Image
           source = {require('./images/XImage.png')}
@@ -466,47 +481,32 @@ class PageTwo extends Component {
   }
 
   _renderTime(){
-    if (this.state.sec <= 9 && this.state.min <= 9){
-      return(
-        <Text style = {styles.TextTime}>0{this.state.min}:0{this.state.sec}</Text>
-      )
-    }
-    if(this.state.sec <= 9 && this.state.min > 9){
-      return(
-        <Text style = {styles.TextTime}>{this.state.min}:0{this.state.sec}</Text>
-      )
-    }
-    if(this.state.sec > 9 && this.state.min <= 9){
-      return(
-        <Text style = {styles.TextTime}>0{this.state.min}:{this.state.sec}</Text>
-      )
-    }
-    if(this.state.sec > 9 && this.state.min > 9){
-      return(
-        <Text style = {styles.TextTime}>{this.state.min}:{this.state.sec}</Text>
-      )
-    }
+    var formattedNumber = ("0" +this.state.min).slice(-2)
+    var formatSec = ("0" +this.state.sec).slice(-2)
+    return (
+      <Text style = {styles.TextTime}>{formattedNumber}:{formatSec}</Text>
+    )
   }
 
   _pts() {
-    var pts = parseFloat(this.state.distanceTravelled*10).toFixed(0);
-    var pts1 = 0;
-    var pts2 = 0;
-    if (this.state.TimeTraning > 30){
-      pts1 = pts1 +pts*2;
-      if (this.state.TimeTraning > 60) {
-        pts1 = pts1 + 100;
-      }
-      if (this.state.TimeTraning > 90) {
-        pts1 = pts1 + 200;
-      }
-    }
-    if (this.state.TimeTraning/this.state.i > 30 ){
-      this.state.i = this.state.i + 1;
-      this.state.pts = pts1;
-      return pts1;
-    } else  return this.state.pts;
-  }
+   var pts = parseFloat(this.state.distanceTravelled*10).toFixed(0);
+   var pts1 = 0;
+   var pts2 = 0;
+   if (this.state.TimeTraning.sec + this.state.TimeTraning.min*60 > 30){
+     pts1 = pts1 +pts*2;
+     if (this.state.TimeTraning.sec + this.state.TimeTraning.min*60 > 60) {
+       pts1 = pts1 + 100;
+     }
+     if (this.state.TimeTraning.sec + this.state.TimeTraning.min*60 > 90) {
+       pts1 = pts1 + 200;
+     }
+   }
+   if ((this.state.TimeTraning.sec + this.state.TimeTraning.min*60)/this.state.i > 30 ){
+     this.state.i = this.state.i + 1;
+     this.state.pts = pts1;
+     return pts1;
+   } else  return this.state.pts;
+ }
   render() {
     return (
       <View style={styles.container}>
@@ -554,7 +554,6 @@ class PageTwo extends Component {
             <Image
               source = {require('./images/ReactangleBottom2.png')}
               style = {{width:width,height : height*0.372}}>
-
               <Text style = {styles.NomberOfMiles}>{parseFloat(this.state.distanceTravelled/1.6).toFixed(2)}</Text>
               <Text style = {styles.TextMiles}>MILE</Text>
             </Image>
