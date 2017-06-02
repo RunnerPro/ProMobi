@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 
 import TextField from 'react-native-md-textinput';
+import registrScreenStyle from './RegistrScreenStyle'
 
 var SCREEN_WIDTH = require('Dimensions').get('window').width;
 var BaseConfig = Navigator.SceneConfigs.FloatFromRight;
@@ -67,7 +68,7 @@ async  _onPressGetStart(self){
 
 _renderTextFild(){
   return(
-    <View style ={styles.Account}>
+    <View style ={registrScreenStyle.Account}>
       <TextField
         label={'User Name'}
         labelColor={'#000'}
@@ -111,28 +112,28 @@ _renderTextFild(){
       <Image
         source = {require('./images/Rectangle.png')}
         style = {{width : width}}>
-          <View style = {styles.container}>
-            <View style = {styles.navBar}>
-              <Text style = {styles.navBarText}> SING UP</Text>
+          <View style = {registrScreenStyle.container}>
+            <View style = {registrScreenStyle.navBar}>
+              <Text style = {registrScreenStyle.navBarText}> SING UP</Text>
                 <TouchableOpacity onPress={() => this.props.navigator.replace({id: 7,})}>
                   <Image
                     source = {require('./images/policy.png')}
-                    style = {styles.imgPolicy}/>
+                    style = {registrScreenStyle.imgPolicy}/>
                 </TouchableOpacity>
-              <View style = {styles.BarForBack}>
+              <View style = {registrScreenStyle.BarForBack}>
                 <TouchableOpacity onPress={() => this.props.navigator.replace({id: 1,})}>
                   <Image
                     source={require('./images/back.png')}
-                    style ={styles.imgBack}/>
+                    style ={registrScreenStyle.imgBack}/>
                 </TouchableOpacity>
               </View>
             </View>
             {this._renderTextFild()}
-            <View style={styles.ViewForButton}>
-              <View style={styles.buttonGet}>
+            <View style={registrScreenStyle.ViewForButton}>
+              <View style={registrScreenStyle.buttonGet}>
                 <TouchableOpacity onPress ={() => this._onPressGetStart(this)} >
-                  <View style={styles.buttomGet}>
-                    <Text style={styles.buttomGetText}>Get Start</Text>
+                  <View style={registrScreenStyle.buttomGet}>
+                    <Text style={registrScreenStyle.buttomGetText}>Get Start</Text>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -142,116 +143,5 @@ _renderTextFild(){
     );
   }
 }
-
-const styles = StyleSheet.create({
-  BarimgPolicy:{
-    height:width/9,
-    width:width/9,
-    top: -width/13,
-    bottom: 0,
-    left: width - width/10,
-    right: 0,
-  },
-  imgPolicy:{
-
-    height:width/9,
-    width:width/9,
-    top: -width/13,
-    bottom: 0,
-    left: width - width/10,
-    right: 0,
-    shadowColor: "#000000",
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
-    shadowOffset: {
-      height: 2,
-      width: 0
-    }
-  },
-  navBarText: {
-    color: '#000000',
-    textAlign: 'center',
-    marginTop : 30,
-    fontFamily : 'Roboto-Regular',
-  },
-  navBar: {
-    height: 64,
-    width: width,
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  container: {
-    flex: 1,
-    justifyContent : 'center',
-    alignItems : 'center',
-    padding:10,
-    paddingTop: 80,
-  },
-  Account:{
-    flex :1,
-     height: height/30,
-      width: width*8/10,
-      backgroundColor : 'transparent',
-      padding: 4,
-      marginLeft : width/60,
-
-  },
-  ViewForButton : {
-    flex : 1.5,
-    flexDirection : 'row',
-  },
-  buttomGetText: {
-    fontSize: 15,
-    textAlign: 'center',
-    margin: 10,
-    color: '#fff',
-    fontFamily : 'Roboto-Regular'
-  },
-  buttomGet: {
-
-    height : height / 14,
-    width: width*8/10,
-    //marginTop : ,
-    marginLeft : width / 60,
-    backgroundColor: '#00CC66',
-    borderRadius : 5,
-    shadowColor: "#000000",
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    shadowOffset: {
-      height: 0,
-      width: 0
-    }
-  },
-  BarForBack :{
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    position : 'absolute',
-    height : 70,
-    width : 70,
-  },
-  imgBack:{
-    left: 0,
-    right: 0,
-    top: 20,
-    bottom:0 ,
-    position: 'absolute',
-    height:width/10,
-    width:width/9,
-    shadowColor: "#000000",
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
-    shadowOffset: {
-      height: 2,
-      width: 0
-    }
-  },
-});
-
 
 module.exports = RegistrScreen;
