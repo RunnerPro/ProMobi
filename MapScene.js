@@ -17,7 +17,7 @@ import {
   AppState
 } from 'react-native';
 
-
+import mapStyles from './MapStyles'
 import pick from 'lodash.pick'
 import haversine from 'haversine'
 import FBSDK , {LoginManager,AccessToken,FBGraphRequest,LoginButton} from 'react-native-fbsdk';
@@ -67,14 +67,11 @@ class PageTwo extends Component {
       lastlongitude : 0,
       pressStop : 0,
       coord : [],
-      Milsec : 0,
-      Milsec2 : 0,
-      sec : 0,
-      Sec2 : 0,
-      min2 : 0,
-      min : 0,
       check : false,
-      TimeTraning : 0,
+      TimeTraning : {
+        'min' : 0,
+        'sec' : 0
+      },
       i : 0,
       pts : 0,
       startTracking : false,
@@ -86,10 +83,8 @@ class PageTwo extends Component {
       auxiliaryDate : 0,
       delta : 0
     }
-    this._timer = this._timer.bind(this);
     this._timeTraning = this._timeTraning.bind(this);
     this._stopAll = this._stopAll.bind(this);
-
   }
 
   _getToken(){
@@ -132,7 +127,6 @@ class PageTwo extends Component {
     })
     if (this.state.startTimer != 0){
       this.state.puseTimer = !this.state.puseTimer
-      this._timer(this.state.startTimer);
       this._timeTraning(this.state.startTimer);
     }
     if (!this.state.check ){
@@ -140,7 +134,6 @@ class PageTwo extends Component {
       this.state.puseTimer = true
       this.state.startTimer = new Date
       this.state.startTimer = this.state.startTimer.getTime()
-      this._timer(this.state.startTimer);
       this._timeTraning(this.state.startTimer);
     }
   }
@@ -173,14 +166,11 @@ class PageTwo extends Component {
 
   _stopAll(){
     this.setState ({
-      TimeTraning : 0,
+      TimeTraning :{
+        'min' : 0,
+        'sec' : 0
+      },
       check : false,
-      Milsec : 0,
-      sec : 0,
-      min : 0,
-      Milsec2 : 0,
-      Sec2 : 0,
-      min2 : 0,
       startCheck : false ,
       JoggingTime : 0,
       delta : 0,
@@ -241,14 +231,14 @@ class PageTwo extends Component {
   _onPressPlayButton(){
       return (
         <Image source = {this.state.playPress ?  require('./images/_btn_pause_4.png') : require('./images/_btn_play_2.png')}
-        style = {styles.btPlay}/>);
+        style = {mapStyles.btPlay}/>);
   }
 
   _onRenderStop() {
     if(!this.state.stopPress && !this.state.startCheck){
       return(
         <Image source = {require('./images/btStop.png')}
-          style = {styles.btStop}/>
+          style = {mapStyles.btStop}/>
       );
     }
   }
@@ -361,29 +351,29 @@ class PageTwo extends Component {
       return(
         <Image
           source={require('./images/bg.png')}
-          style={styles.img2}>
-            <View style = {styles.container3}>
-              <View style={styles.navBar2}>
-                <Text style ={styles.TypeOFText2}> RUNNER PRO</Text>
-                <View style ={styles.BarForBurger}>
+          style={mapStyles.img2}>
+            <View style = {mapStyles.container3}>
+              <View style={mapStyles.navBar2}>
+                <Text style ={mapStyles.TypeOFText2}> RUNNER PRO</Text>
+                <View style ={mapStyles.BarForBurger}>
                   <TouchableOpacity onPress={() => this.setState({PressBurger : false})}>
                     <Image
                       source={require('./images/_close_white.png')}
-                      style ={styles.imgClose}/>
+                      style ={mapStyles.imgClose}/>
                   </TouchableOpacity>
                 </View>
               </View>
               <TouchableOpacity>
-                <Text style = {styles.TypeOFText}>ACCOUNT</Text>
+                <Text style = {mapStyles.TypeOFText}>ACCOUNT</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => this._onSelectACTYVITYLOG()} >
-                <Text style = {styles.TypeOFText}>ACTYVITY LOG</Text>
+                <Text style = {mapStyles.TypeOFText}>ACTYVITY LOG</Text>
               </TouchableOpacity>
               <TouchableOpacity >
-                <Text style = {styles.TypeOFText}>SCREEN LAYOUT</Text>
+                <Text style = {mapStyles.TypeOFText}>SCREEN LAYOUT</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => this._onSeclectLOGOUT()} >
-                <Text style = {styles.TypeOFText}>LOG OUT</Text>
+                <Text style = {mapStyles.TypeOFText}>LOG OUT</Text>
               </TouchableOpacity>
           </View>
         </Image>
@@ -395,7 +385,7 @@ class PageTwo extends Component {
     if(this.state.pressStop == 1 && this.state.coord[0] != null ) {
       return (
         <MapView
-        style={styles.map}
+        style={mapStyles.map}
         mapType={'standard'}
         showsUserLocation={true}
         zoomEnable = {true}
@@ -415,7 +405,7 @@ class PageTwo extends Component {
       );
     } else {
       return ( <MapView
-        style={styles.map}
+        style={mapStyles.map}
         mapType={'standard'}
         showsUserLocation={true}
         followUserLocation={true}
@@ -449,31 +439,15 @@ class PageTwo extends Component {
      }
   }
 
- _timer (timer){
-   Timer = timer
-   var self = this;
-   if(this.state.check && this.state.puseTimer){
-     var IntermediateTime = new Date
-     var JoggingTime = new Date(IntermediateTime.getTime() - timer - this.state.delta)
-       this.setState({
-         sec : JoggingTime.getUTCSeconds(),
-         min : JoggingTime.getUTCMinutes()
-       })
-     setTimeout(function () {
-       return (self._timer(Timer))
-     }, 1000);
-   }
- }
-
   _RenderBonus (){
     if (this.state.TimeTraning.sec + this.state.TimeTraning.min*60 > 30){
       return (
         <Image
           source = {require('./images/XImage.png')}
-          style = {styles.imageXPTS}>
+          style = {mapStyles.imageXPTS}>
           <View style ={{flexDirection : 'row'}}>
-             <Text style = {styles.TextX}>X</Text>
-            <Text style = {styles.TextFactor}>2</Text>
+             <Text style = {mapStyles.TextX}>X</Text>
+            <Text style = {mapStyles.TextFactor}>2</Text>
           </View>
         </Image>
       );
@@ -481,10 +455,10 @@ class PageTwo extends Component {
   }
 
   _renderTime(){
-    var formattedNumber = ("0" +this.state.min).slice(-2)
-    var formatSec = ("0" +this.state.sec).slice(-2)
+    var formattedNumber = ("0" +this.state.TimeTraning.min).slice(-2)
+    var formatSec = ("0" +this.state.TimeTraning.sec).slice(-2)
     return (
-      <Text style = {styles.TextTime}>{formattedNumber}:{formatSec}</Text>
+      <Text style = {mapStyles.TextTime}>{formattedNumber}:{formatSec}</Text>
     )
   }
 
@@ -509,15 +483,15 @@ class PageTwo extends Component {
  }
   render() {
     return (
-      <View style={styles.container}>
+      <View style={mapStyles.container}>
         {this._onRenderMapView()}
-          <View style={styles.navBar}>
+          <View style={mapStyles.navBar}>
               <Image
                 source={require('./images/RectangleTop.png')}
                 style = {{width:width,height : height/6}}>
                 <View style = {{flexDirection : 'row'}}>
-                    <Text style={styles.TextActivityColories}>Active Calories</Text>
-                    <Text style = {styles.TextAVG}>Avg.min/miles</Text>
+                    <Text style={mapStyles.TextActivityColories}>Active Calories</Text>
+                    <Text style = {mapStyles.TextAVG}>Avg.min/miles</Text>
                   </View>
               </Image>
               <Image
@@ -525,37 +499,37 @@ class PageTwo extends Component {
                 style = {{width:width, height : height/3}}>
                 <View style = {{ flexDirection: 'row'}}>
                   <View style = {{width : width /3}}>
-                    <Text style = {styles.TextNomberColories}>{parseFloat(this.state.distanceTravelled*100/1.6).toFixed(2)}</Text>
-                    <Text style = {styles.TextColories}>kcal</Text>
+                    <Text style = {mapStyles.TextNomberColories}>{parseFloat(this.state.distanceTravelled*100/1.6).toFixed(2)}</Text>
+                    <Text style = {mapStyles.TextColories}>kcal</Text>
                   </View>
                   <View style ={{width:width/4, marginLeft : width*0.4}}>
-                    <Text style = {styles.TextNomberAVG}>{parseFloat(this.state.speed).toFixed(2)}</Text>
+                    <Text style = {mapStyles.TextNomberAVG}>{parseFloat(this.state.speed).toFixed(2)}</Text>
                   </View>
                 </View>
 
               </Image>
-              <TouchableOpacity style={styles.TouchPolygon} onPress ={() =>  this._handlePressId(3)}>
+              <TouchableOpacity style={mapStyles.TouchPolygon} onPress ={() =>  this._handlePressId(3)}>
                 <Image
                   source ={require('./images/Polygon.png')}
-                  style = {styles.imgPolygon}>
-                  <Text style = {styles.TextNomberPTS}>{this._pts()}</Text>
-                  <Text style = {styles.TextPTS}>pts</Text>
+                  style = {mapStyles.imgPolygon}>
+                  <Text style = {mapStyles.TextNomberPTS}>{this._pts()}</Text>
+                  <Text style = {mapStyles.TextPTS}>pts</Text>
                 </Image>
                 {this._RenderBonus()}
             </TouchableOpacity>
-            <TouchableOpacity style={styles.TouchHamburger} onPress={() => this.setState({PressBurger : true})}>
+            <TouchableOpacity style={mapStyles.TouchHamburger} onPress={() => this.setState({PressBurger : true})}>
               <Image
                 source ={require('./images/hamburger.png')}
-                style = {styles.imgHamburger}
+                style = {mapStyles.imgHamburger}
                 />
             </TouchableOpacity>
             </View>
-            <View style={styles.bottomBar}>
+            <View style={mapStyles.bottomBar}>
             <Image
               source = {require('./images/ReactangleBottom2.png')}
               style = {{width:width,height : height*0.372}}>
-              <Text style = {styles.NomberOfMiles}>{parseFloat(this.state.distanceTravelled/1.6).toFixed(2)}</Text>
-              <Text style = {styles.TextMiles}>MILE</Text>
+              <Text style = {mapStyles.NomberOfMiles}>{parseFloat(this.state.distanceTravelled/1.6).toFixed(2)}</Text>
+              <Text style = {mapStyles.TextMiles}>MILE</Text>
             </Image>
               <Image
                 source = {require('./images/RectangleBottom.png')}
@@ -563,16 +537,16 @@ class PageTwo extends Component {
                           height : height*2/8,
                           top : height }}>
                   {this._renderTime()}
-                  <TouchableOpacity style = {styles.touchPlay} onPress={() => this._onChangePlay()}>
+                  <TouchableOpacity style = {mapStyles.touchPlay} onPress={() => this._onChangePlay()}>
                     {this._onPressPlayButton()}
                   </TouchableOpacity>
-                  <TouchableOpacity style = {styles.touchStop} onPress = {() => this._onPresStop()}>
+                  <TouchableOpacity style = {mapStyles.touchStop} onPress = {() => this._onPresStop()}>
                     {this._onRenderStop()}
                   </TouchableOpacity>
-                  <Text style = {styles.TextBPM}>Heart rate</Text>
+                  <Text style = {mapStyles.TextBPM}>Heart rate</Text>
                   <View style = {{flexDirection : 'row',width : width /5, marginLeft:width*0.75}}>
-                    <Text style = {styles.NomberBPM} >107</Text>
-                    <Text style = {styles.bpm}>bpm</Text>
+                    <Text style = {mapStyles.NomberBPM} >107</Text>
+                    <Text style = {mapStyles.bpm}>bpm</Text>
                   </View>
               </Image>
             </View>
@@ -581,326 +555,5 @@ class PageTwo extends Component {
     );
   }
 };
-
-const styles = StyleSheet.create({
-  TypeOFText: {
-   fontSize: 15,
-   fontWeight: 'bold',
-   textAlign: 'center',
-   alignSelf : 'center',
-   color: 'white',
-   backgroundColor : 'transparent',
-   marginTop : 20,
-   fontFamily : 'Roboto-Medium'
-
- },
- TypeOFText2: {
-   fontFamily : 'Roboto-Regular',
-   fontSize: 15,
-   fontWeight: 'bold',
-   textAlign: 'center',
-   alignSelf : 'center',
-   color: 'white',
-   backgroundColor : 'transparent',
-   marginTop : 30,
-
- },
-  BarForBurger :{
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    position : 'absolute',
-    height : 70,
-    width : 70,
-  },
-  container3: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-  },
-  imgClose:{
-    left: 0,
-    right: 0,
-    top: 15,
-    bottom:0 ,
-    position: 'absolute',
-    height: 50,
-    width: 50,
-  },
-  img2: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    height: null,
-    width: null,
-    opacity : 0.95,
-  },
-  navBar2: {
-   backgroundColor: 'transparent',
-   height: 64,
-   width: width,
-   position: 'absolute',
-   top: 0,
-   bottom: 0,
-   left: 0,
-   right: 0,
- },
-  touchStop : {
-    height : height/10,
-    width : width /50,
-  },
-  touchPlay : {
-    height : height /100,
-  },
-  bpm : {
-    fontFamily: 'Roboto-Medium',
-    backgroundColor : 'transparent',
-    fontSize : 10,
-    color: '#979797',
-    marginTop : height /60,
-  },
-  NomberBPM : {
-    backgroundColor : 'transparent',
-    fontFamily : 'Roboto-Medium',
-    fontSize : 20,
-    color : '#000000',
-  },
-  TextBPM : {
-    backgroundColor : 'transparent',
-    fontFamily : 'Roboto-Regular',
-    fontSize : 10,
-    color : '#979797',
-    paddingLeft : width *3/4,
-    marginTop : -height/10
-  },
-  btStop : {
-    width : width/8,
-    height : width /8,
-    position : 'absolute',
-    top: height /50,
-    bottom: 0,
-    left:  width/7,
-    right: 0,
-    shadowColor: "#000000",
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    shadowOffset: {
-      height: 0,
-      width: 0
-    }
-
-  },
-  btPlay : {
-    width : width/5,
-    height : width /5,
-    position : 'absolute',
-    top: height /100,
-    bottom: 0,
-    left:  width*4/10,
-    right: 0,
-    shadowColor: "#000000",
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    shadowOffset: {
-      height: 0,
-      width: 0
-    }
-
-  },
-  TextTime : {
-    backgroundColor : 'transparent',
-    fontFamily : 'Roboto-Regular',
-    color : '#7002FF',
-    fontSize : 40,
-    textAlign : 'center',
-  },
-  TextMiles : {
-    backgroundColor : 'transparent',
-    marginLeft: width*0.46,
-    marginTop : -height /70,
-    fontSize : 20,
-    fontFamily : 'Roboto-Medium',
-    color : '#D8D8D8'
-  },
-  NomberOfMiles : {
-    backgroundColor : 'transparent',
-    color : '#000000',
-    fontFamily : 'Roboto-Medium',
-    marginTop : height*0.273,
-    textAlign : 'center',
-    fontSize : 40
-  },
-  TextFactor : {
-    backgroundColor : 'transparent',
-    color : '#ffffff',
-    fontSize : 14,
-    marginTop : height / 110,
-    marginHorizontal : -width/90
-
-  },
-  TextX : {
-    backgroundColor : 'transparent',
-    color : '#ffffff',
-    fontFamily : 'Roboto-Bold',
-    fontSize : 10,
-    marginTop : height / 80,
-    marginHorizontal : width/60,
-  },
-  TextPTS : {
-    backgroundColor : 'transparent',
-    fontFamily : 'Roboto-Medium',
-    textAlign : 'center',
-    color : '#ffffff',
-    marginTop : - height/100,
-  },
-  TextNomberPTS : {
-    backgroundColor : 'transparent',
-    fontFamily : 'Roboto-Medium',
-    textAlign : 'center',
-    color : '#ffffff',
-    marginTop : height/30,
-    fontSize : 35
-  },
-  imageXPTS :{
-    width : width / 12,
-    height : width/12,
-    position : 'absolute',
-    top: height*2 /13,
-    bottom: 0,
-    left:  width*3/11 + 2,
-    right: 0,
-
-  },
-  TextNomberAVG:{
-    borderColor : '#979797',
-    fontFamily: 'Roboto-Medium',
-    backgroundColor : 'transparent',
-    fontSize : 20,
-    marginTop : - height/130
-  },
-  TextAVG : {
-    fontSize : 10,
-    color : '#979797',
-    marginTop : height/7,
-    backgroundColor : 'transparent',
-    fontFamily: 'Roboto-Regular',
-    marginLeft : width*0.49,
-  },
-  TextNomberColories:{
-    borderColor : '#979797',
-    fontFamily: 'Roboto-Medium',
-    backgroundColor : 'transparent',
-    marginHorizontal: width/25,
-    marginTop : - height/130,
-    fontSize : 20,
-
-  },
-  TextColories:{
-    fontFamily: 'Roboto-Medium',
-    backgroundColor : 'transparent',
-    marginLeft:-width/25,
-    marginTop : height /300,
-    fontSize : 10,
-    color: '#979797',
-
-  },
-  TextActivityColories:{
-    fontSize: 10,
-    color : '#979797',
-    marginHorizontal : width/25,
-    marginTop : height/7,
-    backgroundColor : 'transparent',
-    fontFamily: 'Roboto-Regular',
-
-  },
-  imgHamburger:{
-    width: width/12,
-    height : height/12,
-    position: 'absolute',
-    top: height / 150,
-    bottom: 0,
-    left:  width/100,
-    right: 0,
-    shadowColor: "#000000",
-    shadowOpacity: 0.3,
-    shadowRadius: 1,
-    shadowOffset: {
-      height: 2,
-      width: 0
-    }
-  },
-  TouchHamburger:{
-    width: width/40,
-    height : height/30,
-    position: 'absolute',
-    top: height / 40,
-    bottom: 0,
-    left:  width/35,
-    right: 0,
-  },
-  imgPolygon:{
-    width: width*2/8,
-    height : height*2/13,
-    position: 'absolute',
-    top: height/40,
-    bottom: 0,
-    left:  width/5,
-    right: 0,
-  },
-  TouchPolygon:{
-    width: width/10,
-    height : height*2/15,
-    position: 'absolute',
-    top: height/40,
-    bottom: 0,
-    left:  width*2/11,
-    right: 0,
-
-  },
-  bottomBar: {
-      position: 'absolute',
-      height: height*2/3,
-      bottom: 0,
-      width: width,
-      flexWrap: 'wrap',
-      flexDirection: 'row',
-      paddingTop:height/15,
-    },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  map: {
-    flex: 1,
-    width: width,
-    height: height,
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-  navBar: {
-    height: height/2,
-    width: width,
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-});
-
 
 module.exports = PageTwo;

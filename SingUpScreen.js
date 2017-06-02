@@ -13,6 +13,7 @@ import {
   TextInput
 } from 'react-native';
 
+import singUpStyle from './SingUpScreenStyle'
 import PageOne from './loadingScene'
 var SCREEN_WIDTH = require('Dimensions').get('window').width;
 var BaseConfig = Navigator.SceneConfigs.FloatFromRight;
@@ -85,23 +86,23 @@ render() {
     <Image
       source = {require('./images/Rectangle.png')}
       style = {{width : width}}>
-      <View style={styles.container}>
-        <View style = {styles.navBar}>
-          <Text style = {styles.navBarText}> LOG IN</Text>
+      <View style={singUpStyle.container}>
+        <View style = {singUpStyle.navBar}>
+          <Text style = {singUpStyle.navBarText}> LOG IN</Text>
           <TouchableOpacity onPress={() => this._handlePressId(7)}>
             <Image
               source = {require('./images/policy.png')}
-              style={styles.imgPolicy}/>
+              style={singUpStyle.imgPolicy}/>
           </TouchableOpacity>
-        <View style = {styles.BarForBack}>
+        <View style = {singUpStyle.BarForBack}>
           <TouchableOpacity onPress={() => this._handlePressId(1)}>
             <Image
               source={require('./images/back.png')}
-              style ={styles.imgBack}/>
+              style ={singUpStyle.imgBack}/>
           </TouchableOpacity>
         </View>
       </View>
-        <View style ={styles.Account}>
+        <View style ={singUpStyle.Account}>
           <TextField
             label={'User Name'}
             labelColor={'#000'}
@@ -129,139 +130,20 @@ render() {
         </View>
         <View style ={{flex:2}}>
           <TouchableOpacity onPress ={() => this._LogUp(this)}>
-            <View style={styles.buttomGet}>
-              <Text style={styles.buttomGetText}>Log up</Text>
+            <View style={singUpStyle.buttomGet}>
+              <Text style={singUpStyle.buttomGetText}>Log up</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={this._TestRegistration} >
-            <View style={styles.buttonSingUpWithFacebook}>
-              <Text style={styles.buttomGetText}>Log with Facebook</Text>
+            <View style={singUpStyle.buttonSingUpWithFacebook}>
+              <Text style={singUpStyle.buttomGetText}>Log with Facebook</Text>
             </View>
           </TouchableOpacity>
-          <Text style={styles.text}>Forgot Password</Text>
+          <Text style={singUpStyle.text}>Forgot Password</Text>
         </View>
       </View>
     </Image>
     );
   }
 }
-const styles = StyleSheet.create({
-  imgPolicy:{
-    height:width/9,
-    width:width/9,
-    top: -width/13,
-    bottom: 0,
-    left: width - width/10,
-    right: 0,
-    shadowColor: "#000000",
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
-    shadowOffset: {
-      height: 2,
-      width: 0
-    }
-  },
-  text : {
-    paddingTop: 10,
-    textAlign: 'center',
-    color : '#7002FF',
-    marginBottom : 50,
-    fontFamily : 'Roboto-Regular',
-  },
-  container: {
-    flex: 1,
-    justifyContent : 'flex-start',
-    alignItems : 'center',
-    padding:10,
-    paddingTop: 80,
-  },
-  buttomGetText: {
-    fontSize: 15,
-    textAlign: 'center',
-    margin: 10,
-    color: '#fff',
-    fontFamily : 'Roboto-Regular'
-  },
-  buttomGet: {
-    height : height / 14,
-    width: width*8/10,
-    marginLeft : width/60,
-    backgroundColor: '#00CC66',
-    borderRadius : 5,
-    shadowColor: "#000000",
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    shadowOffset: {
-      height: 0,
-      width: 0
-    }
-  },
-  buttonSingUpWithFacebook: {
-    height : height/14,
-    width: width*8/10,
-    marginTop : 10,
-    marginLeft : width/60,
-    backgroundColor: '#3b5998',
-    borderRadius : 5,
-    shadowColor: "#000000",
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    shadowOffset: {
-      height: 0,
-      width: 0
-    }
-  },
-  ViewForLogo:{
-    flex:1,
-  },
-  Account:{
-      flex :1,
-      height: height/30,
-      width: width*8/10,
-      backgroundColor : 'transparent',
-      padding: 4,
-      marginLeft : width/60,
-  },
-  navBarText: {
-    color: '#000000',
-    textAlign: 'center',
-    marginTop : 30,
-    fontFamily : 'Roboto-Regular',
-  },
-  navBar: {
-    height: 64,
-    width: width,
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  imgBack:{
-    left: 0,
-    right: 0,
-    top: 20,
-    bottom:0 ,
-    position: 'absolute',
-    height:width/10,
-    width:width/9,
-    shadowColor: "#000000",
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
-    shadowOffset: {
-      height: 2,
-      width: 0
-    }
-  },
-  BarForBack :{
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    position : 'absolute',
-    height : 70,
-    width : 70,
-  },
-});
-
 module.exports = SingUpScreen;
