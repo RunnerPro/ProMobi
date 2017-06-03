@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import FBSDK , {LoginManager,AccessToken} from 'react-native-fbsdk';
 import loadingStyles from './loadingSceneStyles'
+import SplashScreen from 'react-native-splash-screen'
 
 
 var SCREEN_WIDTH = require('Dimensions').get('window').width;

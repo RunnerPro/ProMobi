@@ -12,6 +12,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <SplashScreen.h>
 
 @implementation AppDelegate
 
@@ -26,6 +27,8 @@
       NSLog(@" %@", name);
     }
   }
+
+
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
 
@@ -42,6 +45,7 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  [SplashScreen show];  // here
   return YES;
 }
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url

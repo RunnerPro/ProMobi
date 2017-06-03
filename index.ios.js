@@ -22,6 +22,7 @@ import SingUp from './SingUpScreen'
 import RegistrScreen from './RegistrScreen'
 import TestBK from './TestBK'
 import Policy  from './Policy'
+import SplashScreen from 'react-native-splash-screen'
 
 var SCREEN_WIDTH = require('Dimensions').get('window').width;
 var BaseConfig = Navigator.SceneConfigs.FloatFromRight;
@@ -36,6 +37,11 @@ class ReactNativeNavigationExample extends Component {
     }
   }
 
+    componentDidMount() {
+    	// do stuff while splash screen is shown
+        // After having done stuff (such as async tasks) hide the splash screen
+        SplashScreen.hide();
+    }
   _renderScene(route, navigator) {
     if (route.id == 1) {
       return <PageOne navigator={navigator} />
