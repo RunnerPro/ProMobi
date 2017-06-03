@@ -9,7 +9,7 @@ const { width, height } = Dimensions.get('window')
 
 module.exports = StyleSheet.create({
   TypeOFText: {
-   fontSize: 15,
+   fontSize: width*0.04,
    fontWeight: 'bold',
    textAlign: 'center',
    alignSelf : 'center',
@@ -21,7 +21,7 @@ module.exports = StyleSheet.create({
  },
  TypeOFText2: {
    fontFamily : 'Roboto-Regular',
-   fontSize: 15,
+   fontSize: width*0.04,
    fontWeight: 'bold',
    textAlign: 'center',
    alignSelf : 'center',
@@ -84,20 +84,20 @@ module.exports = StyleSheet.create({
   bpm : {
     fontFamily: 'Roboto-Medium',
     backgroundColor : 'transparent',
-    fontSize : 10,
+    fontSize : width*0.03,
     color: '#979797',
-    marginTop : height /60,
+    marginTop : height /90,
   },
   NomberBPM : {
     backgroundColor : 'transparent',
     fontFamily : 'Roboto-Medium',
-    fontSize : 20,
+    fontSize : width*0.05,
     color : '#000000',
   },
   TextBPM : {
     backgroundColor : 'transparent',
     fontFamily : 'Roboto-Regular',
-    fontSize : 10,
+    fontSize : width*0.03,
     color : '#979797',
     paddingLeft : width *3/4,
     marginTop : -height/10
@@ -106,9 +106,9 @@ module.exports = StyleSheet.create({
     width : width/8,
     height : width /8,
     position : 'absolute',
-    top: height /50,
+    top: -height*0.02,
     bottom: 0,
-    left:  width/7,
+    left:  -width*0.3,
     right: 0,
     shadowColor: "#000000",
     shadowOpacity: 0.2,
@@ -123,9 +123,9 @@ module.exports = StyleSheet.create({
     width : width/5,
     height : width /5,
     position : 'absolute',
-    top: height /100,
+    top: -height*0.14,
     bottom: 0,
-    left:  width*4/10,
+    left:  -width*0.09,
     right: 0,
     shadowColor: "#000000",
     shadowOpacity: 0.3,
@@ -140,14 +140,14 @@ module.exports = StyleSheet.create({
     backgroundColor : 'transparent',
     fontFamily : 'Roboto-Regular',
     color : '#7002FF',
-    fontSize : 40,
+    fontSize : width*0.1,
     textAlign : 'center',
   },
   TextMiles : {
     backgroundColor : 'transparent',
     marginLeft: width*0.46,
     marginTop : -height /70,
-    fontSize : 20,
+    fontSize : width*0.05,
     fontFamily : 'Roboto-Medium',
     color : '#D8D8D8'
   },
@@ -157,12 +157,12 @@ module.exports = StyleSheet.create({
     fontFamily : 'Roboto-Medium',
     marginTop : height*0.273,
     textAlign : 'center',
-    fontSize : 40
+    fontSize : width*0.1
   },
   TextFactor : {
     backgroundColor : 'transparent',
     color : '#ffffff',
-    fontSize : 14,
+    fontSize : width*0.04,
     marginTop : height / 110,
     marginHorizontal : -width/90
 
@@ -171,7 +171,7 @@ module.exports = StyleSheet.create({
     backgroundColor : 'transparent',
     color : '#ffffff',
     fontFamily : 'Roboto-Bold',
-    fontSize : 10,
+    fontSize : width*0.03,
     marginTop : height / 80,
     marginHorizontal : width/60,
   },
@@ -188,7 +188,7 @@ module.exports = StyleSheet.create({
     textAlign : 'center',
     color : '#ffffff',
     marginTop : height/30,
-    fontSize : 35
+    fontSize : width*0.09
   },
   imageXPTS :{
     width : width / 12,
@@ -204,16 +204,16 @@ module.exports = StyleSheet.create({
     borderColor : '#979797',
     fontFamily: 'Roboto-Medium',
     backgroundColor : 'transparent',
-    fontSize : 20,
+    fontSize : width*0.05,
     marginTop : - height/130
   },
   TextAVG : {
-    fontSize : 10,
+    fontSize : width*0.03,
     color : '#979797',
     marginTop : height/7,
     backgroundColor : 'transparent',
     fontFamily: 'Roboto-Regular',
-    marginLeft : width*0.49,
+    marginLeft : width*0.495,
   },
   TextNomberColories:{
     borderColor : '#979797',
@@ -221,7 +221,7 @@ module.exports = StyleSheet.create({
     backgroundColor : 'transparent',
     marginHorizontal: width/25,
     marginTop : - height/130,
-    fontSize : 20,
+    fontSize : width*0.05,
 
   },
   TextColories:{
@@ -229,12 +229,12 @@ module.exports = StyleSheet.create({
     backgroundColor : 'transparent',
     marginLeft:-width/25,
     marginTop : height /300,
-    fontSize : 10,
+    fontSize : width*0.03,
     color: '#979797',
 
   },
   TextActivityColories:{
-    fontSize: 10,
+    fontSize: width*0.03,
     color : '#979797',
     marginHorizontal : width/25,
     marginTop : height/7,
@@ -307,7 +307,7 @@ module.exports = StyleSheet.create({
     height: height,
   },
   welcome: {
-    fontSize: 20,
+    fontSize: width*0.05,
     textAlign: 'center',
     margin: 10,
   },

@@ -24,7 +24,7 @@ module.exports = StyleSheet.create({
 
   TextRunnForGood : {
     fontFamily : 'Roboto-Regular',
-    fontSize : 15
+    fontSize : width*0.04
   },
   navBar: {
     height: height / 5,
@@ -67,7 +67,7 @@ module.exports = StyleSheet.create({
 
   },
   welcome: {
-    fontSize: 25,
+    fontSize: width*0.07,
     textAlign: 'center',
     margin: 10,
     color: '#460D80',
@@ -76,9 +76,9 @@ module.exports = StyleSheet.create({
   },
   buttomGetText: {
     fontFamily: 'Helvetica',
-    fontSize: 15,
+    fontSize: width*0.04,
     textAlign: 'center',
-    margin: 10,
+    margin: width*0.025,
     color: '#fff',
     fontFamily : 'Roboto-Regular',
 

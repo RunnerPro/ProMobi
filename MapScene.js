@@ -98,7 +98,7 @@ class PageTwo extends Component {
             Token : token
           })
         }
-        })
+      })
   }
 
   _onChangePlay(){
@@ -485,7 +485,8 @@ class PageTwo extends Component {
     return (
       <View style={mapStyles.container}>
         {this._onRenderMapView()}
-          <View style={mapStyles.navBar}>
+          <View style={mapStyles.navBar}
+          accessible={false} pointerEvents='none'>
               <Image
                 source={require('./images/RectangleTop.png')}
                 style = {{width:width,height : height/6}}>
@@ -498,7 +499,7 @@ class PageTwo extends Component {
                 source={require('./images/RectangleTop2.png')}
                 style = {{width:width, height : height/3}}>
                 <View style = {{ flexDirection: 'row'}}>
-                  <View style = {{width : width /3}}>
+                  <View style = {{width : width /3, flexDirection : 'row'}}>
                     <Text style = {mapStyles.TextNomberColories}>{parseFloat(this.state.distanceTravelled*100/1.6).toFixed(2)}</Text>
                     <Text style = {mapStyles.TextColories}>kcal</Text>
                   </View>
@@ -506,25 +507,10 @@ class PageTwo extends Component {
                     <Text style = {mapStyles.TextNomberAVG}>{parseFloat(this.state.speed).toFixed(2)}</Text>
                   </View>
                 </View>
-
               </Image>
-              <TouchableOpacity style={mapStyles.TouchPolygon} onPress ={() =>  this._handlePressId(3)}>
-                <Image
-                  source ={require('./images/Polygon.png')}
-                  style = {mapStyles.imgPolygon}>
-                  <Text style = {mapStyles.TextNomberPTS}>{this._pts()}</Text>
-                  <Text style = {mapStyles.TextPTS}>pts</Text>
-                </Image>
-                {this._RenderBonus()}
-            </TouchableOpacity>
-            <TouchableOpacity style={mapStyles.TouchHamburger} onPress={() => this.setState({PressBurger : true})}>
-              <Image
-                source ={require('./images/hamburger.png')}
-                style = {mapStyles.imgHamburger}
-                />
-            </TouchableOpacity>
             </View>
-            <View style={mapStyles.bottomBar}>
+            <View style={mapStyles.bottomBar}
+            accessible={false} pointerEvents='none'>
             <Image
               source = {require('./images/ReactangleBottom2.png')}
               style = {{width:width,height : height*0.372}}>
@@ -537,19 +523,36 @@ class PageTwo extends Component {
                           height : height*2/8,
                           top : height }}>
                   {this._renderTime()}
-                  <TouchableOpacity style = {mapStyles.touchPlay} onPress={() => this._onChangePlay()}>
-                    {this._onPressPlayButton()}
-                  </TouchableOpacity>
-                  <TouchableOpacity style = {mapStyles.touchStop} onPress = {() => this._onPresStop()}>
-                    {this._onRenderStop()}
-                  </TouchableOpacity>
+
                   <Text style = {mapStyles.TextBPM}>Heart rate</Text>
-                  <View style = {{flexDirection : 'row',width : width /5, marginLeft:width*0.75}}>
+                  <View style = {{flexDirection : 'row',width : width /5, marginLeft:width*0.75,marginTop : height/8}}>
                     <Text style = {mapStyles.NomberBPM} >107</Text>
                     <Text style = {mapStyles.bpm}>bpm</Text>
                   </View>
               </Image>
             </View>
+            <TouchableOpacity style={mapStyles.TouchHamburger} onPress={() => this.setState({PressBurger : true})}>
+              <Image
+                source ={require('./images/hamburger.png')}
+                style = {mapStyles.imgHamburger}
+                />
+            </TouchableOpacity>
+            <TouchableOpacity style={mapStyles.TouchPolygon} onPress ={() =>  this._handlePressId(3)}>
+              <Image
+                source ={require('./images/Polygon.png')}
+                style = {mapStyles.imgPolygon}>
+                <Text style = {mapStyles.TextNomberPTS}>{this._pts()}</Text>
+                <Text style = {mapStyles.TextPTS}>pts</Text>
+              </Image>
+              {this._RenderBonus()}
+          </TouchableOpacity>
+          <TouchableOpacity style = {mapStyles.touchStop} onPress = {() => this._onPresStop()}>
+            {this._onRenderStop()}
+          </TouchableOpacity>
+          <TouchableOpacity style = {mapStyles.touchPlay} onPress={() => this._onChangePlay()}>
+            {this._onPressPlayButton()}
+          </TouchableOpacity>
+
              {this._renderBurger()}
       </View>
     );
