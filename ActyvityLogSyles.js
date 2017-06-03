@@ -14,7 +14,7 @@ module.exports = StyleSheet.create({
     color : '#979797',
     fontFamily : 'Roboto-Regular',
     marginTop : height*0.01,
-    fontSize : 10
+    fontSize : width*0.03
   },
   padding : {
     marginLeft : width/20,
@@ -29,13 +29,13 @@ module.exports = StyleSheet.create({
   },
   textPrefix : {
     fontFamily : 'Roboto-Regular',
-    fontSize : 10,
+    fontSize : width*0.03,
     color : '#979797',
     paddingTop : height*0.007
   },
   textData : {
     fontFamily : 'Roboto-Regular',
-    fontSize : 14
+    fontSize : width*0.04
   },
   container: {
     flex: 1,
@@ -77,7 +77,7 @@ module.exports = StyleSheet.create({
   textLog : {
     fontFamily: 'Roboto-Regular',
     backgroundColor : 'transparent',
-    fontSize : 15,
+    fontSize : width*0.5,
     marginLeft : width/2.65,
     marginTop : height*0.009
   },
@@ -126,14 +126,14 @@ module.exports = StyleSheet.create({
     backgroundColor : 'transparent',
     fontFamily : 'Roboto-Bold',
     color : '#ffffff',
-    fontSize : 10,
+    fontSize : width*0.03,
     marginTop : height*0.004,
     marginHorizontal : width*0.01
   },
   ptsToNextLevl : {
     backgroundColor : 'transparent',
     marginTop : height/45,
-    fontSize : 10 ,
+    fontSize : width*0.03 ,
     textAlign : 'center',
     fontFamily : 'Roboto-Regular'
   },
@@ -164,13 +164,13 @@ module.exports = StyleSheet.create({
   nomberActivities : {
     marginLeft:width/6,
     fontFamily: 'Roboto-Medium',
-    fontSize : 25,
+    fontSize : width*0.07,
     marginTop : -height*0.01
   },
   nomberPoints : {
     marginLeft: width/2.2,
     fontFamily: 'Roboto-Medium',
-    fontSize : 25,
+    fontSize : width*0.07,
     marginTop : -height*0.01
   }
 

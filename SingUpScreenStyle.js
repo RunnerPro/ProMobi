@@ -38,9 +38,9 @@ module.exports = StyleSheet.create({
     paddingTop: 80,
   },
   buttomGetText: {
-    fontSize: 15,
+    fontSize: width*0.04,
     textAlign: 'center',
-    margin: 10,
+    margin: width*0.037,
     color: '#fff',
     fontFamily : 'Roboto-Regular'
   },

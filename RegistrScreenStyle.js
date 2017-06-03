@@ -68,9 +68,9 @@ module.exports = StyleSheet.create({
     flexDirection : 'row',
   },
   buttomGetText: {
-    fontSize: 15,
+    fontSize: width*0.04,
     textAlign: 'center',
-    margin: 10,
+    margin: width*0.03,
     color: '#fff',
     fontFamily : 'Roboto-Regular'
   },

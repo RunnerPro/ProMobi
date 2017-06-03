@@ -499,7 +499,7 @@ class PageTwo extends Component {
                 source={require('./images/RectangleTop2.png')}
                 style = {{width:width, height : height/3}}>
                 <View style = {{ flexDirection: 'row'}}>
-                  <View style = {{width : width /3}}>
+                  <View style = {{width : width /3, flexDirection : 'row'}}>
                     <Text style = {mapStyles.TextNomberColories}>{parseFloat(this.state.distanceTravelled*100/1.6).toFixed(2)}</Text>
                     <Text style = {mapStyles.TextColories}>kcal</Text>
                   </View>
